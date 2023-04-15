@@ -1,6 +1,5 @@
 use leptos::*;
 use monaco::api::CodeEditor as CodeEditorModel;
-use wasm_bindgen::JsCast;
 
 #[component]
 fn CodeEditor(cx: Scope, initial_value: i32) -> impl IntoView {
@@ -8,7 +7,11 @@ fn CodeEditor(cx: Scope, initial_value: i32) -> impl IntoView {
     let (editor, set_editor) = create_signal(cx, None);
 
     node_ref.on_load(cx, |element| {
-        let e = CodeEditorModel::create(&element, None);
+        use wasm_bindgen::JsCast;
+
+        let div_element: &web_sys::HtmlDivElement = &element;
+        let html_element = div_element.unchecked_ref::<web_sys::HtmlElement>();
+        let e = CodeEditorModel::create(html_element, None);
 
         set_editor(Some(e))
     });
