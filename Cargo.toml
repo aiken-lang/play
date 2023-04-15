@@ -7,3 +7,6 @@ edition = "2021"
 
 [dependencies]
 leptos = "0.2.5"
+monaco = "0.3.0"
+wasm-bindgen = "0.2.84"
+web-sys = "0.3.61"

@@ -1011,6 +1011,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "monaco"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d1b882423fc90db4603ce73a57e64dd568a66ee6776ac09a91bb05622cf6c1e3"
+dependencies = [
+ "js-sys",
+ "paste",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
 name = "native-tls"
 version = "0.2.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1272,6 +1284,9 @@ name = "play"
 version = "0.1.0"
 dependencies = [
  "leptos",
+ "monaco",
+ "wasm-bindgen",
+ "web-sys",
 ]
 
 [[package]]
