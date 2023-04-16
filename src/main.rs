@@ -5,9 +5,31 @@ use monaco::{
 };
 
 #[component]
-fn CodeEditor(cx: Scope, initial_value: i32) -> impl IntoView {
+fn Header(cx: Scope) -> impl IntoView {
+    view! { cx,
+        <header>
+            <img />
+
+            <div>
+               <button>"Check"</button>
+               <button>"Share"</button>
+            </div>
+        </header>
+    }
+}
+
+#[component]
+fn Navigation(cx: Scope) -> impl IntoView {
+    view! { cx,
+        <div>
+        </div>
+    }
+}
+
+#[component]
+fn CodeEditor(cx: Scope) -> impl IntoView {
     let node_ref = create_node_ref(cx);
-    let (editor, set_editor) = create_signal(cx, None);
+    let (_editor, set_editor) = create_signal(cx, None);
 
     node_ref.on_load(cx, move |element| {
         use wasm_bindgen::JsCast;
@@ -32,12 +54,23 @@ fn CodeEditor(cx: Scope, initial_value: i32) -> impl IntoView {
     }
 }
 
+#[component]
+fn Tests(cx: Scope) -> impl IntoView {
+    view! { cx,
+        <div></div>
+    }
+}
+
 fn main() {
     mount_to_body(|cx| {
         view! { cx,
-            <p>
-                <CodeEditor initial_value=0 />
-            </p>
+            <Header />
+
+            <div>
+                <Navigation />
+                <CodeEditor />
+                <Tests />
+            </div>
         }
     })
 }
