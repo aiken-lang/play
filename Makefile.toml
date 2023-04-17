@@ -1,0 +1,33 @@
+[config]
+skip_core_tasks = true
+
+[tasks.default]
+alias = "build"
+
+[tasks.dev]
+category = "Dev"
+run_task = { name = ["dev-css", "dev-trunk"], fork = true, parallel = true }
+
+[tasks.dev-trunk]
+category = "Dev"
+install_crate = "trunk"
+command = "trunk"
+args = ["serve", "--open"]
+
+[tasks.dev-css]
+category = "Dev"
+command = "npx"
+args = ["tailwindcss", "-i", "./styles.css", "-o", "./output.css", "--watch"]
+
+[tasks.build]
+clear = true
+category = "Build"
+install_crate = "trunk"
+command = "trunk"
+args = ["build", "--release"]
+dependencies = ["build-css"]
+
+[tasks.build-css]
+category = "Build"
+command = "npx"
+args = ["tailwindcss", "-i", "./styles.css", "-o", "./output.css", "--minify"]

@@ -10,8 +10,8 @@ fn Header(cx: Scope) -> impl IntoView {
         <header>
             <img />
 
-            <div>
-               <button>"Check"</button>
+            <div class="bg-red-500">
+               <button class="bg-red-50">"Check"</button>
                <button>"Share"</button>
             </div>
         </header>
