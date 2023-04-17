@@ -2,7 +2,11 @@
 module.exports = {
   content: ["*.html", "./src/**/*.rs"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ["Source Sans Pro"],
+      },
+    },
   },
   plugins: [],
 }

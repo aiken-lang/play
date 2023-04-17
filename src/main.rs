@@ -1,4 +1,5 @@
 use leptos::*;
+use leptos_icons::*;
 use monaco::{
     api::{CodeEditor as CodeEditorModel, CodeEditorOptions},
     sys::editor::BuiltinTheme,
@@ -14,15 +15,15 @@ fn Header(cx: Scope) -> impl IntoView {
                     type="image/png"
                     src="https://raw.githubusercontent.com/aiken-lang/branding/main/assets/icon.png"
                 />
-                <span class="text-white">"AIKEN PLAYGROUND"</span>
+                <span class="text-white text-lg font-semibold">"AIKEN PLAYGROUND"</span>
             </div>
-
-
             <div class="flex gap-x-4">
-                <button class="bg-gray-40 w-24 py-1.5 rounded">
+                <button class="bg-gray-40 flex justify-center items-center gap-x-2 text-sm font-semibold text-white w-24 py-1.5 rounded">
+                    <LeptosIcon icon=FaIcon::FaPlaySolid />
                     "Check"
                 </button>
-                <button class="bg-share-button px-3 py-1.5 rounded">
+                <button class="bg-share-button flex justify-center items-center gap-x-2 text-sm font-semibold text-white px-3 py-1.5 rounded">
+                    <LeptosIcon icon=FaIcon::FaShareSolid />
                     "Share"
                 </button>
             </div>
@@ -32,10 +33,7 @@ fn Header(cx: Scope) -> impl IntoView {
 
 #[component]
 fn Navigation(cx: Scope) -> impl IntoView {
-    view! { cx,
-        <div>
-        </div>
-    }
+    view! { cx, <div></div> }
 }
 
 #[component]
@@ -60,28 +58,22 @@ fn CodeEditor(cx: Scope) -> impl IntoView {
         set_editor(Some(e))
     });
 
-    view! { cx,
-        <div _ref=node_ref>
-        </div>
-    }
+    view! { cx, <div _ref=node_ref></div> }
 }
 
 #[component]
 fn Tests(cx: Scope) -> impl IntoView {
-    view! { cx,
-        <div></div>
-    }
+    view! { cx, <div></div> }
 }
 
 fn main() {
     mount_to_body(|cx| {
         view! { cx,
-            <Header />
-
+            <Header/>
             <div>
-                <Navigation />
-                <CodeEditor />
-                <Tests />
+                <Navigation/>
+                <CodeEditor/>
+                <Tests/>
             </div>
         }
     })

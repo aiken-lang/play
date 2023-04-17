@@ -826,6 +826,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "leptos-icons"
+version = "0.0.1"
+source = "git+https://github.com/Carlosted/leptos-icons.git#37b6748e49f0f8a0a5ba7911ae757ec08be91b05"
+dependencies = [
+ "leptos",
+ "leptos-icons-core",
+ "leptos-icons-fa",
+]
+
+[[package]]
+name = "leptos-icons-core"
+version = "0.0.1"
+source = "git+https://github.com/Carlosted/leptos-icons.git#37b6748e49f0f8a0a5ba7911ae757ec08be91b05"
+
+[[package]]
+name = "leptos-icons-fa"
+version = "0.0.1"
+source = "git+https://github.com/Carlosted/leptos-icons.git#37b6748e49f0f8a0a5ba7911ae757ec08be91b05"
+dependencies = [
+ "leptos-icons-core",
+]
+
+[[package]]
 name = "leptos_config"
 version = "0.2.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1284,6 +1307,7 @@ name = "play"
 version = "0.1.0"
 dependencies = [
  "leptos",
+ "leptos-icons",
  "monaco",
  "wasm-bindgen",
  "web-sys",
