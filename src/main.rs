@@ -8,7 +8,7 @@ use monaco::{
 #[component]
 fn Header(cx: Scope) -> impl IntoView {
     view! { cx,
-        <header class="flex justify-between items-center p-3">
+        <header class="flex justify-between items-center p-3 border-b border-solid border-gray-40">
             <div class="flex items-center gap-x-3">
                 <img
                     class="w-8 h-8"
