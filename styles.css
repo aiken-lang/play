@@ -1,3 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.bg-gray-40 {
+  background-color: rgb(77, 77, 77);
+}
+
+.bg-share-button {
+  background: linear-gradient(131.15deg, #F7CCFE -8.51%, #660FF7 82.79%);
+}

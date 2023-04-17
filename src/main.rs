@@ -7,12 +7,24 @@ use monaco::{
 #[component]
 fn Header(cx: Scope) -> impl IntoView {
     view! { cx,
-        <header>
-            <img />
+        <header class="flex justify-between items-center p-3">
+            <div class="flex items-center gap-x-3">
+                <img
+                    class="w-8 h-8"
+                    type="image/png"
+                    src="https://raw.githubusercontent.com/aiken-lang/branding/main/assets/icon.png"
+                />
+                <span class="text-white">"AIKEN PLAYGROUND"</span>
+            </div>
 
-            <div class="bg-red-500">
-               <button class="bg-red-50">"Check"</button>
-               <button>"Share"</button>
+
+            <div class="flex gap-x-4">
+                <button class="bg-gray-40 w-24 py-1.5 rounded">
+                    "Check"
+                </button>
+                <button class="bg-share-button px-3 py-1.5 rounded">
+                    "Share"
+                </button>
             </div>
         </header>
     }
