@@ -832,7 +832,7 @@ source = "git+https://github.com/Carlosted/leptos-icons.git#37b6748e49f0f8a0a5ba
 dependencies = [
  "leptos",
  "leptos-icons-core",
- "leptos-icons-fa",
+ "leptos-icons-ri",
 ]
 
 [[package]]
@@ -841,7 +841,7 @@ version = "0.0.1"
 source = "git+https://github.com/Carlosted/leptos-icons.git#37b6748e49f0f8a0a5ba7911ae757ec08be91b05"
 
 [[package]]
-name = "leptos-icons-fa"
+name = "leptos-icons-ri"
 version = "0.0.1"
 source = "git+https://github.com/Carlosted/leptos-icons.git#37b6748e49f0f8a0a5ba7911ae757ec08be91b05"
 dependencies = [

@@ -11,12 +11,12 @@ monaco = "0.3.0"
 wasm-bindgen = "0.2.84"
 web-sys = "0.3.61"
 leptos-icons = { git = "https://github.com/Carlosted/leptos-icons.git", features = [
-    "FaPlaySolid",
-    "FaShareSolid",
-    "FaGearSolid",
-    "FaGithubBrands",
-    "FaBookSolid",
-    "FaDiscordBrands",
+    "RiBook2DocumentFill",
+    "RiDiscordLogosFill",
+    "RiGithubLogosFill",
+    "RiPlayMediaFill",
+    "RiSettings3SystemFill",
+    "RiShareForwardSystemFill",
 ] }
 
 [profile.release]
