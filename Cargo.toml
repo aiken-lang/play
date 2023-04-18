@@ -10,7 +10,14 @@ leptos = "0.2.5"
 monaco = "0.3.0"
 wasm-bindgen = "0.2.84"
 web-sys = "0.3.61"
-leptos-icons = { git = "https://github.com/Carlosted/leptos-icons.git", features = ["FaPlaySolid", "FaShareSolid"] }
+leptos-icons = { git = "https://github.com/Carlosted/leptos-icons.git", features = [
+    "FaPlaySolid",
+    "FaShareSolid",
+    "FaGearSolid",
+    "FaGithubBrands",
+    "FaBookSolid",
+    "FaDiscordBrands",
+] }
 
 [profile.release]
 opt-level = "s"

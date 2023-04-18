@@ -5,6 +5,13 @@ use monaco::{
     sys::editor::BuiltinTheme,
 };
 
+const INITIAL_CONTENT: &str = r#"validator {
+  fn hello(_d: Data, _r: Data, ctx: Data) -> Bool {
+    True
+  }
+}
+"#;
+
 #[component]
 fn Header(cx: Scope) -> impl IntoView {
     view! { cx,
@@ -19,11 +26,11 @@ fn Header(cx: Scope) -> impl IntoView {
             </div>
             <div class="flex gap-x-4">
                 <button class="bg-gray-40 flex justify-center items-center gap-x-2 text-sm font-semibold text-white w-24 py-1.5 rounded">
-                    <LeptosIcon icon=FaIcon::FaPlaySolid />
+                    <LeptosIcon icon=FaIcon::FaPlaySolid/>
                     "Check"
                 </button>
                 <button class="bg-share-button flex justify-center items-center gap-x-2 text-sm font-semibold text-white px-3 py-1.5 rounded">
-                    <LeptosIcon icon=FaIcon::FaShareSolid />
+                    <LeptosIcon icon=FaIcon::FaShareSolid/>
                     "Share"
                 </button>
             </div>
@@ -33,7 +40,22 @@ fn Header(cx: Scope) -> impl IntoView {
 
 #[component]
 fn Navigation(cx: Scope) -> impl IntoView {
-    view! { cx, <div></div> }
+    view! { cx,
+        <div class="flex flex-col justify-between p-3.5 text-gray-0 border-r border-solid border-gray-40">
+            <LeptosIcon icon=FaIcon::FaGearSolid class="w-6 h-6"/>
+            <div class="flex flex-col gap-y-7">
+                <a target="_blank" href="https://aiken-lang.org/installation-instructions">
+                    <LeptosIcon icon=FaIcon::FaBookSolid class="w-6 h-6"/>
+                </a>
+                <a target="_blank" href="https://discord.gg/Vc3x8N9nz2">
+                    <LeptosIcon icon=FaIcon::FaDiscordBrands class="w-6 h-6"/>
+                </a>
+                <a target="_blank" href="https://github.com/aiken-lang">
+                    <LeptosIcon icon=FaIcon::FaGithubBrands class="w-6 h-6"/>
+                </a>
+            </div>
+        </div>
+    }
 }
 
 #[component]
@@ -49,9 +71,9 @@ fn CodeEditor(cx: Scope) -> impl IntoView {
 
         let options = CodeEditorOptions::default()
             .with_language("rust".to_string())
-            .with_value("main.rs".to_string())
+            .with_value(INITIAL_CONTENT.to_string())
             .with_builtin_theme(BuiltinTheme::VsDark)
-            .with_new_dimension(1000, 1000);
+            .with_new_dimension(784, 960);
 
         let e = CodeEditorModel::create(html_element, Some(options));
 
@@ -70,7 +92,7 @@ fn main() {
     mount_to_body(|cx| {
         view! { cx,
             <Header/>
-            <div>
+            <div class="flex grow">
                 <Navigation/>
                 <CodeEditor/>
                 <Tests/>
