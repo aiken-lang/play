@@ -10,10 +10,27 @@ use monaco::{
 mod project;
 use project::Project;
 
-const INITIAL_CONTENT: &str = r#"validator {
+const INITIAL_CONTENT: &str = r#"use aiken/builtin
+
+validator {
   fn hello(_d: Data, _r: Data, ctx: Data) -> Bool {
     True
   }
+}
+
+fn map(list: List<a>, apply: fn(a) -> b) -> List<b> {
+  when list is {
+    [] -> []
+    [x, ..xs] -> [apply(x), ..map(xs, apply)]
+  }
+}
+
+test thing() {
+  [2, 3, 4] == map([1, 2, 3], fn(x) { x + 1 })
+}
+
+test other() {
+  builtin.add_integer(1, 2) == 3
 }
 "#;
 
