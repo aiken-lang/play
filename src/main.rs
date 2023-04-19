@@ -1,9 +1,14 @@
+use std::{cell::RefCell, rc::Rc};
+
 use leptos::*;
 use leptos_icons::*;
 use monaco::{
     api::{CodeEditor as CodeEditorModel, CodeEditorOptions},
     sys::editor::BuiltinTheme,
 };
+
+mod project;
+use project::Project;
 
 const INITIAL_CONTENT: &str = r#"validator {
   fn hello(_d: Data, _r: Data, ctx: Data) -> Bool {
@@ -12,8 +17,13 @@ const INITIAL_CONTENT: &str = r#"validator {
 }
 "#;
 
+type ModelCell = Rc<RefCell<Option<CodeEditorModel>>>;
+
 #[component]
-fn Header(cx: Scope) -> impl IntoView {
+fn Header<F>(cx: Scope, on_check: F) -> impl IntoView
+where
+    F: Fn(web_sys::MouseEvent) + 'static,
+{
     view! { cx,
         <header class="flex justify-between items-center p-3 border-b border-solid border-gray-40">
             <div class="flex items-center gap-x-3">
@@ -25,7 +35,10 @@ fn Header(cx: Scope) -> impl IntoView {
                 <span class="text-white text-lg font-semibold">"AIKEN PLAYGROUND"</span>
             </div>
             <div class="flex gap-x-4">
-                <button class="bg-gray-40 flex justify-center items-center gap-x-2 text-sm font-semibold text-white w-24 py-1.5 rounded">
+                <button
+                    on:click=on_check
+                    class="bg-gray-40 flex justify-center items-center gap-x-2 text-sm font-semibold text-white w-24 py-1.5 rounded"
+                >
                     <LeptosIcon icon=RiIcon::RiPlayMediaFill/>
                     "Check"
                 </button>
@@ -59,9 +72,8 @@ fn Navigation(cx: Scope) -> impl IntoView {
 }
 
 #[component]
-fn CodeEditor(cx: Scope) -> impl IntoView {
+fn CodeEditor(cx: Scope, set_editor: WriteSignal<ModelCell>) -> impl IntoView {
     let node_ref = create_node_ref(cx);
-    let (_editor, set_editor) = create_signal(cx, None);
 
     node_ref.on_load(cx, move |element| {
         use wasm_bindgen::JsCast;
@@ -77,7 +89,9 @@ fn CodeEditor(cx: Scope) -> impl IntoView {
 
         let e = CodeEditorModel::create(html_element, Some(options));
 
-        set_editor(Some(e))
+        set_editor.update(|editor| {
+            editor.replace(Some(e));
+        });
     });
 
     view! { cx, <div _ref=node_ref></div> }
@@ -88,15 +102,36 @@ fn Tests(cx: Scope) -> impl IntoView {
     view! { cx, <div></div> }
 }
 
+#[component]
+fn App(cx: Scope) -> impl IntoView {
+    let project = Project::new();
+    let (editor, set_editor) = create_signal(cx, ModelCell::default());
+
+    let run_check = move |_ev: web_sys::MouseEvent| {
+        let text = editor
+            .get()
+            .borrow()
+            .as_ref()
+            .unwrap()
+            .get_model()
+            .unwrap()
+            .get_value();
+
+        project.build(&text);
+    };
+
+    view! { cx,
+        <Header on_check=run_check/>
+        <div class="flex grow">
+            <Navigation/>
+            <CodeEditor set_editor=set_editor/>
+            <Tests/>
+        </div>
+    }
+}
+
 fn main() {
     mount_to_body(|cx| {
-        view! { cx,
-            <Header/>
-            <div class="flex grow">
-                <Navigation/>
-                <CodeEditor/>
-                <Tests/>
-            </div>
-        }
+        view! { cx, <App/> }
     })
 }
