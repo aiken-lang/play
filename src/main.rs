@@ -1,7 +1,11 @@
+use std::error::Error;
 use std::{cell::RefCell, rc::Rc};
 
+use aiken_lang::tipo;
+use aiken_lang::tipo::error::Warning;
 use leptos::*;
 use leptos_icons::*;
+use miette::Diagnostic;
 use monaco::{
     api::{CodeEditor as CodeEditorModel, CodeEditorOptions},
     sys::editor::BuiltinTheme,
@@ -71,7 +75,7 @@ where
 #[component]
 fn Navigation(cx: Scope) -> impl IntoView {
     view! { cx,
-        <div class="flex flex-col justify-between p-3.5 text-gray-0 border-r border-solid border-gray-40">
+        <div class="flex flex-col justify-between p-4 text-gray-0 border-r border-solid border-gray-40">
             <LeptosIcon icon=RiIcon::RiSettings3SystemFill class="w-6 h-6"/>
             <div class="flex flex-col gap-y-7">
                 <a target="_blank" href="https://aiken-lang.org/installation-instructions">
@@ -115,14 +119,55 @@ fn CodeEditor(cx: Scope, set_editor: WriteSignal<ModelCell>) -> impl IntoView {
 }
 
 #[component]
-fn Tests(cx: Scope) -> impl IntoView {
-    view! { cx, <div></div> }
+fn Output(cx: Scope, warnings: ReadSignal<Vec<Warning>>) -> impl IntoView {
+    view! { cx,
+        <div class="p-4 overflow-y-scroll">
+            <div>
+                <div class="flex items-center mb-5">
+                    "Warnings" <span class="py-1 px-2">{move || warnings.get().len()}</span>
+                </div>
+                <ul class="flex flex-col gap-y-4">
+                    <For
+                        each=move || warnings.get()
+                        key=|warning| warning.to_string()
+                        view=move |cx, warning| {
+                            let message = match warning.source() {
+                                Some(err) => err.to_string(),
+                                None => warning.to_string(),
+                            };
+                            let code = warning.code().map(|c| c.to_string());
+                            let help = warning
+                                .help()
+                                .map(|h| {
+                                    view! { cx, <div>"HELP " {h.to_string()}</div> }
+                                });
+                            view! { cx,
+                                <li class="bg-warning output-item rounded-lg pl-1">
+                                    <div class="bg-gray-80 pr-2 pt-2 pb-4 pl-3">
+                                        <div class="flex items-center gap-x-3.5">
+                                            <LeptosIcon icon=RiIcon::RiAlertSystemLine class="w-3.5 h-3.5"/>
+                                            {code}
+                                        </div>
+                                        <div>{message}</div>
+                                        {help}
+                                    </div>
+                                </li>
+                            }
+                        }
+                    />
+                </ul>
+            </div>
+        </div>
+    }
 }
 
 #[component]
 fn App(cx: Scope) -> impl IntoView {
     let project = Project::new();
     let (editor, set_editor) = create_signal(cx, ModelCell::default());
+    let (test_results, set_test_results) = create_signal::<Vec<Warning>>(cx, vec![]);
+    let (warnings, set_warnings) = create_signal::<Vec<Warning>>(cx, vec![]);
+    let (error, set_errors) = create_signal::<Vec<tipo::error::Error>>(cx, vec![]);
 
     let run_check = move |_ev: web_sys::MouseEvent| {
         let text = editor
@@ -134,7 +179,9 @@ fn App(cx: Scope) -> impl IntoView {
             .unwrap()
             .get_value();
 
-        project.build(&text);
+        set_warnings.set(vec![]);
+
+        project.build(&text, set_warnings);
     };
 
     view! { cx,
@@ -142,7 +189,7 @@ fn App(cx: Scope) -> impl IntoView {
         <div class="flex grow">
             <Navigation/>
             <CodeEditor set_editor=set_editor/>
-            <Tests/>
+            <Output warnings=warnings/>
         </div>
     }
 }

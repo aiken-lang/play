@@ -6,6 +6,10 @@
   background-color: rgb(77, 77, 77);
 }
 
+.bg-gray-80 {
+  background-color: rgb(46, 46, 46);
+}
+
 .border-gray-40 {
   border-color: rgb(77, 77, 77);
 }
@@ -17,4 +21,12 @@
 .bg-share-button {
   background: linear-gradient(131.15deg, #F7CCFE -8.51%, #660FF7 82.79%);
   box-shadow: 0px 0px 4px #660FF7;
+}
+
+.output-item {
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+.bg-warning {
+  background: linear-gradient(180deg, rgba(248, 174, 97, 1) 0%, rgba(248, 174, 97, 0) 100%);
 }

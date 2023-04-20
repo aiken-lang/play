@@ -25,7 +25,7 @@ dependencies = [
 [[package]]
 name = "aiken-lang"
 version = "1.0.2-alpha"
-source = "git+https://github.com/aiken-lang/aiken.git?branch=playground#11bd97d6bfa92f134ab668a0ad40b768d3ec9356"
+source = "git+https://github.com/aiken-lang/aiken.git?branch=playground#fda032454c9e91c43bfa7b5fb074ae28bddda994"
 dependencies = [
  "chumsky",
  "hex",
@@ -378,9 +378,9 @@ dependencies = [
 
 [[package]]
 name = "der"
-version = "0.7.3"
+version = "0.7.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "82b10af9f9f9f2134a42d3f8aa74658660f2e0234b0eb81bd171df8aa32779ed"
+checksum = "86b14af2045fa69ed2b7a48934bebb842d0f33e73e96e78766ecb14bb5347a11"
 dependencies = [
  "const-oid",
  "zeroize",
@@ -543,7 +543,7 @@ dependencies = [
 [[package]]
 name = "flat-rs"
 version = "1.0.2-alpha"
-source = "git+https://github.com/aiken-lang/aiken.git?branch=playground#11bd97d6bfa92f134ab668a0ad40b768d3ec9356"
+source = "git+https://github.com/aiken-lang/aiken.git?branch=playground#fda032454c9e91c43bfa7b5fb074ae28bddda994"
 dependencies = [
  "anyhow",
  "thiserror",
@@ -1210,9 +1210,9 @@ dependencies = [
 
 [[package]]
 name = "libc"
-version = "0.2.141"
+version = "0.2.142"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3304a64d199bb964be99741b7a14d26972741915b3649639149b2479bb46f4b5"
+checksum = "6a987beff54b60ffa6d51982e1aa1146bc42f19bd26be28b0586f252fccf5317"
 
 [[package]]
 name = "linked-hash-map"
@@ -1222,9 +1222,9 @@ checksum = "0717cef1bc8b636c6e1c1bbdefc09e6322da8a9321966e8928ef80d20f7f770f"
 
 [[package]]
 name = "linux-raw-sys"
-version = "0.3.2"
+version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3f508063cc7bb32987c71511216bd5a32be15bccb6a80b52df8b9d7f01fc3aa2"
+checksum = "9b085a4f2cde5781fc4b1717f2e86c62f5cda49de7ba99a7c2eae02b61c9064c"
 
 [[package]]
 name = "lock_api"
@@ -1730,6 +1730,7 @@ dependencies = [
  "indexmap",
  "leptos",
  "leptos-icons",
+ "miette",
  "monaco",
  "uplc",
  "wasm-bindgen",
@@ -1964,9 +1965,9 @@ dependencies = [
 
 [[package]]
 name = "rustix"
-version = "0.37.11"
+version = "0.37.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "85597d61f83914ddeba6a47b3b8ffe7365107221c2e557ed94426489fefb5f77"
+checksum = "f79bef90eb6d984c72722595b5b1348ab39275a5e5123faca6863bf07d75a4e0"
 dependencies = [
  "bitflags",
  "errno",
@@ -2503,7 +2504,7 @@ checksum = "f962df74c8c05a667b5ee8bcf162993134c104e96440b663c8daa176dc772d8c"
 [[package]]
 name = "uplc"
 version = "1.0.2-alpha"
-source = "git+https://github.com/aiken-lang/aiken.git?branch=playground#11bd97d6bfa92f134ab668a0ad40b768d3ec9356"
+source = "git+https://github.com/aiken-lang/aiken.git?branch=playground#fda032454c9e91c43bfa7b5fb074ae28bddda994"
 dependencies = [
  "anyhow",
  "cryptoxide",

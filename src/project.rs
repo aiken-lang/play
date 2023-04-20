@@ -8,10 +8,11 @@ use aiken_lang::{
         CodeGenerator,
     },
     parser,
-    tipo::TypeInfo,
+    tipo::{error::Warning, TypeInfo},
     IdGenerator,
 };
 use indexmap::IndexMap;
+use leptos::{SignalSet, WriteSignal};
 use uplc::{
     ast::{NamedDeBruijn, Program},
     machine::cost_model::ExBudget,
@@ -49,7 +50,7 @@ impl Project {
         }
     }
 
-    pub fn build(&self, source_code: &str) {
+    pub fn build(&self, source_code: &str, set_warnings: WriteSignal<Vec<Warning>>) {
         let kind = ModuleKind::Validator;
         let (mut ast, _extra) = parser::module(source_code, kind).expect("Failed to parse module");
         let name = "play".to_string();
@@ -67,6 +68,8 @@ impl Project {
                 &mut warnings,
             )
             .expect("Failed to type-check module");
+
+        set_warnings.set(warnings);
 
         let mut module_types: IndexMap<&String, &TypeInfo> = self.module_types.iter().collect();
 

@@ -12,8 +12,10 @@ getrandom = { version = "0.2.9", features = ["js"] }
 indexmap = "1.9.2"
 leptos = { version = "0.2.5", features = ["stable"] }
 leptos-icons = { git = "https://github.com/Carlosted/leptos-icons.git", features = [
+    "RiAlertSystemLine",
     "RiBook2DocumentFill",
     "RiDiscordLogosFill",
+    "RiErrorWarningSystemLine",
     "RiGithubLogosFill",
     "RiPlayMediaFill",
     "RiSettings3SystemFill",
@@ -22,6 +24,7 @@ leptos-icons = { git = "https://github.com/Carlosted/leptos-icons.git", features
 monaco = "0.3.0"
 wasm-bindgen = "0.2.84"
 web-sys = "0.3.61"
+miette = "5.8.0"
 
 [profile.release]
 codegen-units = 1
