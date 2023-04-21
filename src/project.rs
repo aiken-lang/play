@@ -1,7 +1,10 @@
 use std::collections::HashMap;
 
 use aiken_lang::{
-    ast::{BinOp, Definition, ModuleKind, Tracing, TypedDataType, TypedFunction},
+    ast::{
+        BinOp, Definition, ModuleKind, Tracing, TypedDataType, TypedDefinition, TypedFunction,
+        TypedValidator,
+    },
     builtins,
     gen_uplc::{
         builder::{DataTypeKey, FunctionAccessKey},
@@ -12,7 +15,7 @@ use aiken_lang::{
     IdGenerator,
 };
 use indexmap::IndexMap;
-use leptos::{SignalSet, WriteSignal};
+use leptos::{SignalSet, SignalUpdate, WriteSignal};
 use uplc::{
     ast::{NamedDeBruijn, Program},
     machine::cost_model::ExBudget,
@@ -29,6 +32,14 @@ pub struct Project {
     module_types: HashMap<String, TypeInfo>,
     functions: IndexMap<FunctionAccessKey, TypedFunction>,
     data_types: IndexMap<DataTypeKey, TypedDataType>,
+}
+
+#[derive(Clone)]
+pub struct TestResult {
+    pub success: bool,
+    pub spent_budget: ExBudget,
+    pub logs: Vec<String>,
+    pub name: String,
 }
 
 impl Project {
@@ -50,7 +61,12 @@ impl Project {
         }
     }
 
-    pub fn build(&self, source_code: &str, set_warnings: WriteSignal<Vec<Warning>>) {
+    pub fn build(
+        &self,
+        source_code: &str,
+        set_warnings: WriteSignal<Vec<(usize, Warning)>>,
+        set_test_results: WriteSignal<Vec<(usize, TestResult)>>,
+    ) {
         let kind = ModuleKind::Validator;
         let (mut ast, _extra) = parser::module(source_code, kind).expect("Failed to parse module");
         let name = "play".to_string();
@@ -69,12 +85,37 @@ impl Project {
             )
             .expect("Failed to type-check module");
 
-        set_warnings.set(warnings);
+        set_warnings.set(warnings.into_iter().enumerate().collect());
 
         let mut module_types: IndexMap<&String, &TypeInfo> = self.module_types.iter().collect();
 
         module_types.insert(&name, &typed_ast.type_info);
 
+        let (tests, validators, functions, data_types) =
+            self.collect_definitions(name.clone(), typed_ast.definitions());
+
+        let mut generator = CodeGenerator::new(functions, data_types, module_types);
+
+        run_tests(tests, &mut generator, set_test_results);
+
+        for validator in validators {
+            let program = generator.generate(validator);
+
+            leptos::log!("{}", program.to_pretty());
+        }
+    }
+
+    #[allow(clippy::type_complexity)]
+    fn collect_definitions<'a>(
+        &'a self,
+        name: String,
+        definitions: impl Iterator<Item = &'a TypedDefinition>,
+    ) -> (
+        Vec<&'a TypedFunction>,
+        Vec<&'a TypedValidator>,
+        IndexMap<FunctionAccessKey, &'a TypedFunction>,
+        IndexMap<DataTypeKey, &'a TypedDataType>,
+    ) {
         let mut functions = IndexMap::new();
         for (k, v) in &self.functions {
             functions.insert(k.clone(), v);
@@ -88,7 +129,7 @@ impl Project {
         let mut tests = vec![];
         let mut validators = vec![];
 
-        for def in typed_ast.definitions() {
+        for def in definitions {
             match def {
                 Definition::Fn(func) => {
                     functions.insert(
@@ -116,42 +157,52 @@ impl Project {
             }
         }
 
-        let mut generator = CodeGenerator::new(functions, data_types, module_types);
+        (tests, validators, functions, data_types)
+    }
+}
 
-        for test in tests {
-            let _evaluation_hint = test.test_hint().map(|(bin_op, left_src, right_src)| {
-                let left = generator
-                    .clone()
-                    .generate_test(&left_src)
-                    .try_into()
-                    .unwrap();
+fn run_tests(
+    tests: Vec<&TypedFunction>,
+    generator: &mut CodeGenerator,
+    set_test_results: WriteSignal<Vec<(usize, TestResult)>>,
+) {
+    for (index, test) in tests.into_iter().enumerate() {
+        let _evaluation_hint = test.test_hint().map(|(bin_op, left_src, right_src)| {
+            let left = generator
+                .clone()
+                .generate_test(&left_src)
+                .try_into()
+                .unwrap();
 
-                let right = generator
-                    .clone()
-                    .generate_test(&right_src)
-                    .try_into()
-                    .unwrap();
+            let right = generator
+                .clone()
+                .generate_test(&right_src)
+                .try_into()
+                .unwrap();
 
-                EvalHint {
-                    bin_op,
-                    left,
-                    right,
-                }
-            });
+            EvalHint {
+                bin_op,
+                left,
+                right,
+            }
+        });
 
-            let program = generator.generate_test(&test.body);
+        let program = generator.generate_test(&test.body);
 
-            let program: Program<NamedDeBruijn> = program.try_into().unwrap();
+        let program: Program<NamedDeBruijn> = program.try_into().unwrap();
 
-            let eval_result = program.eval(ExBudget::default());
+        let mut eval_result = program.eval(ExBudget::default());
 
-            leptos::log!("{}", eval_result.result().unwrap().to_pretty());
-        }
-
-        for validator in validators {
-            let program = generator.generate(validator);
-
-            leptos::log!("{}", program.to_pretty());
-        }
+        set_test_results.update(|t| {
+            t.push((
+                index,
+                TestResult {
+                    success: !eval_result.failed(),
+                    spent_budget: eval_result.cost(),
+                    logs: eval_result.logs(),
+                    name: test.name.clone(),
+                },
+            ))
+        });
     }
 }

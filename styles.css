@@ -10,12 +10,32 @@
   background-color: rgb(46, 46, 46);
 }
 
+.bg-gray-90 {
+  background-color: rgb(20, 20, 20);
+}
+
+.bg-blue-0 {
+  background-color: rgb(65, 153, 235);
+}
+
 .border-gray-40 {
   border-color: rgb(77, 77, 77);
 }
 
 .text-gray-0 {
   color: rgb(128, 128, 128);
+}
+
+.text-blue-40 {
+  color: rgb(131, 190, 246);
+}
+
+.text-gray-40 {
+  color: rgb(179, 179, 179);
+}
+
+.text-gray-70 {
+  color: rgb(217, 217, 217);
 }
 
 .bg-share-button {
@@ -27,6 +47,7 @@
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
 }
 
-.bg-warning {
+.bg-warning-gradient {
   background: linear-gradient(180deg, rgba(248, 174, 97, 1) 0%, rgba(248, 174, 97, 0) 100%);
 }
+

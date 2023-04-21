@@ -14,6 +14,8 @@ leptos = { version = "0.2.5", features = ["stable"] }
 leptos-icons = { git = "https://github.com/Carlosted/leptos-icons.git", features = [
     "RiAlertSystemLine",
     "RiBook2DocumentFill",
+    "RiCpuDeviceLine",
+    "RiDatabase2DeviceLine",
     "RiDiscordLogosFill",
     "RiErrorWarningSystemLine",
     "RiGithubLogosFill",

@@ -14,6 +14,8 @@ use monaco::{
 mod project;
 use project::Project;
 
+use crate::project::TestResult;
+
 const INITIAL_CONTENT: &str = r#"use aiken/builtin
 
 validator {
@@ -119,18 +121,56 @@ fn CodeEditor(cx: Scope, set_editor: WriteSignal<ModelCell>) -> impl IntoView {
 }
 
 #[component]
-fn Output(cx: Scope, warnings: ReadSignal<Vec<Warning>>) -> impl IntoView {
+fn Output(
+    cx: Scope,
+    test_results: ReadSignal<Vec<(usize, TestResult)>>,
+    warnings: ReadSignal<Vec<(usize, Warning)>>,
+) -> impl IntoView {
     view! { cx,
-        <div class="p-4 overflow-y-scroll">
+        <div class="p-4 overflow-y-scroll flex flex-col gap-y-11">
             <div>
-                <div class="flex items-center mb-5">
-                    "Warnings" <span class="py-1 px-2">{move || warnings.get().len()}</span>
+                <div class="flex items-center mb-5 text-gray-40 gap-x-2 text-lg font-normal">
+                    "Tests" <span class="py-1 px-2 bg-gray-90 rounded text-sm font-semibold">{move || test_results.get().len()}</span>
+                </div>
+                <ul class="flex flex-col gap-y-4">
+                    <For
+                        each=move || test_results.get()
+                        key=|test_result| test_result.0
+                        view=move |cx, (_, test_result)| {
+                            let pass_or_fail = if test_result.success { "PASS" } else { "FAIL" };
+                            view! { cx,
+                                <li class="bg-blue-0 output-item rounded-lg pl-1 overflow-hidden">
+                                    <div class="flex items-center justify-between bg-gray-80 pr-2 pt-2 pb-2 pl-3">
+                                        <div class="flex items-center gap-x-4">
+                                            <span class="text-blue-40 font-semibold text-xs">{pass_or_fail}</span>
+                                            <span class="text-white text-sm font-normal">{test_result.name}</span>
+                                        </div>
+                                        <div class="flex items-center justify-start gap-x-9 text-gray-70 mr-9 text-sm font-normal">
+                                            <div class="flex items-center gap-x-1">
+                                                <LeptosIcon icon=RiIcon::RiCpuDeviceLine class="w-3.5 h-3.5"/>
+                                                {test_result.spent_budget.mem}
+                                            </div>
+                                            <div class="flex items-center gap-x-1">
+                                                <LeptosIcon icon=RiIcon::RiDatabase2DeviceLine class="w-3.5 h-3.5"/>
+                                                {test_result.spent_budget.cpu}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                        }
+                    />
+                </ul>
+            </div>
+            <div>
+                <div class="flex items-center mb-5 text-gray-40 gap-x-2 text-lg font-normal">
+                    "Warnings" <span class="py-1 px-2 bg-gray-90 rounded text-sm font-semibold">{move || warnings.get().len()}</span>
                 </div>
                 <ul class="flex flex-col gap-y-4">
                     <For
                         each=move || warnings.get()
-                        key=|warning| warning.to_string()
-                        view=move |cx, warning| {
+                        key=|warning| warning.0
+                        view=move |cx, (_, warning)| {
                             let message = match warning.source() {
                                 Some(err) => err.to_string(),
                                 None => warning.to_string(),
@@ -142,7 +182,7 @@ fn Output(cx: Scope, warnings: ReadSignal<Vec<Warning>>) -> impl IntoView {
                                     view! { cx, <div>"HELP " {h.to_string()}</div> }
                                 });
                             view! { cx,
-                                <li class="bg-warning output-item rounded-lg pl-1">
+                                <li class="bg-warning-gradient output-item rounded-lg pl-1 overflow-hidden">
                                     <div class="bg-gray-80 pr-2 pt-2 pb-4 pl-3">
                                         <div class="flex items-center gap-x-3.5">
                                             <LeptosIcon icon=RiIcon::RiAlertSystemLine class="w-3.5 h-3.5"/>
@@ -165,8 +205,8 @@ fn Output(cx: Scope, warnings: ReadSignal<Vec<Warning>>) -> impl IntoView {
 fn App(cx: Scope) -> impl IntoView {
     let project = Project::new();
     let (editor, set_editor) = create_signal(cx, ModelCell::default());
-    let (test_results, set_test_results) = create_signal::<Vec<Warning>>(cx, vec![]);
-    let (warnings, set_warnings) = create_signal::<Vec<Warning>>(cx, vec![]);
+    let (test_results, set_test_results) = create_signal::<Vec<(usize, TestResult)>>(cx, vec![]);
+    let (warnings, set_warnings) = create_signal::<Vec<(usize, Warning)>>(cx, vec![]);
     let (error, set_errors) = create_signal::<Vec<tipo::error::Error>>(cx, vec![]);
 
     let run_check = move |_ev: web_sys::MouseEvent| {
@@ -179,9 +219,10 @@ fn App(cx: Scope) -> impl IntoView {
             .unwrap()
             .get_value();
 
-        set_warnings.set(vec![]);
+        log!("yooo");
+        set_test_results.set(vec![]);
 
-        project.build(&text, set_warnings);
+        project.build(&text, set_warnings, set_test_results);
     };
 
     view! { cx,
@@ -189,7 +230,7 @@ fn App(cx: Scope) -> impl IntoView {
         <div class="flex grow">
             <Navigation/>
             <CodeEditor set_editor=set_editor/>
-            <Output warnings=warnings/>
+            <Output test_results=test_results warnings=warnings/>
         </div>
     }
 }
