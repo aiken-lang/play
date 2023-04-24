@@ -45,12 +45,15 @@ test other() {
 type ModelCell = Rc<RefCell<Option<CodeEditorModel>>>;
 
 #[component]
-fn Header<F>(cx: Scope, on_check: F) -> impl IntoView
+fn Header<F>(cx: Scope, on_check: F, header_ref: NodeRef<html::Header>) -> impl IntoView
 where
     F: Fn(web_sys::MouseEvent) + 'static,
 {
     view! { cx,
-        <header class="flex justify-between items-center p-3 border-b border-solid border-gray-40">
+        <header
+            _ref=header_ref
+            class="flex justify-between items-center p-3 border-b border-solid border-gray-40"
+        >
             <div class="flex items-center gap-x-3">
                 <img
                     class="w-8 h-8"
@@ -106,11 +109,13 @@ fn CodeEditor(cx: Scope, set_editor: WriteSignal<ModelCell>) -> impl IntoView {
         let div_element: &web_sys::HtmlDivElement = &element;
         let html_element = div_element.unchecked_ref::<web_sys::HtmlElement>();
 
+        let height = document().body().unwrap().client_height() - 56;
+
         let options = CodeEditorOptions::default()
             .with_language("rust".to_string())
             .with_value(INITIAL_CONTENT.to_string())
             .with_builtin_theme(BuiltinTheme::VsDark)
-            .with_new_dimension(784, 960);
+            .with_new_dimension(784, height);
 
         let e = CodeEditorModel::create(html_element, Some(options));
 
@@ -186,8 +191,8 @@ fn Output(
                                 .help()
                                 .map(|help_message| {
                                     view! { cx,
-                                        <div class="text-gray-70 text-sm flex gap-x-3 items-center">
-                                            <span class="text-blue-40 text-xs">"HELP"</span>
+                                        <div class="text-gray-70 text-sm flex gap-x-3 items-start">
+                                            <span class="text-blue-40 text-xs leading-5">"HELP"</span>
                                             {help_message}
                                         </div>
                                     }
@@ -228,8 +233,8 @@ fn Output(
                                 .help()
                                 .map(|h| {
                                     view! { cx,
-                                        <div class="text-gray-70 text-sm flex gap-x-3 items-center">
-                                            <span class="text-blue-40 text-xs">"HELP"</span>
+                                        <div class="text-gray-70 text-sm flex gap-x-3 items-start">
+                                            <span class="text-blue-40 text-xs leading-5">"HELP"</span>
                                             {h.to_string()}
                                         </div>
                                     }
@@ -261,6 +266,7 @@ fn App(cx: Scope) -> impl IntoView {
     let (test_results, set_test_results) = create_signal::<Vec<(usize, TestResult)>>(cx, vec![]);
     let (warnings, set_warnings) = create_signal::<Vec<(usize, Warning)>>(cx, vec![]);
     let (errors, set_errors) = create_signal::<Vec<(usize, CompilerError)>>(cx, vec![]);
+    let editor_parent_ref = create_node_ref::<html::Header>(cx);
 
     let run_check = move |_ev: web_sys::MouseEvent| {
         let text = editor
@@ -272,14 +278,15 @@ fn App(cx: Scope) -> impl IntoView {
             .unwrap()
             .get_value();
 
-        log!("yooo");
         set_test_results.set(vec![]);
+        set_warnings.set(vec![]);
+        set_errors.set(vec![]);
 
         project.build(&text, set_warnings, set_errors, set_test_results);
     };
 
     view! { cx,
-        <Header on_check=run_check/>
+        <Header on_check=run_check header_ref=editor_parent_ref/>
         <div class="flex grow">
             <Navigation/>
             <CodeEditor set_editor=set_editor/>
