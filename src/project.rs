@@ -21,6 +21,8 @@ use uplc::{
     machine::cost_model::ExBudget,
 };
 
+use crate::compiler_error::CompilerError;
+
 pub struct EvalHint {
     pub bin_op: BinOp,
     pub left: Program<NamedDeBruijn>,
@@ -65,43 +67,58 @@ impl Project {
         &self,
         source_code: &str,
         set_warnings: WriteSignal<Vec<(usize, Warning)>>,
+        set_errors: WriteSignal<Vec<(usize, CompilerError)>>,
         set_test_results: WriteSignal<Vec<(usize, TestResult)>>,
     ) {
         let kind = ModuleKind::Validator;
-        let (mut ast, _extra) = parser::module(source_code, kind).expect("Failed to parse module");
-        let name = "play".to_string();
-        ast.name = name.clone();
 
-        let mut warnings = vec![];
+        match parser::module(source_code, kind) {
+            Ok((mut ast, _extra)) => {
+                let name = "play".to_string();
+                ast.name = name.clone();
 
-        let typed_ast = ast
-            .infer(
-                &self.id_gen,
-                kind,
-                &name,
-                &self.module_types,
-                Tracing::NoTraces,
-                &mut warnings,
-            )
-            .expect("Failed to type-check module");
+                let mut warnings = vec![];
 
-        set_warnings.set(warnings.into_iter().enumerate().collect());
+                match ast.infer(
+                    &self.id_gen,
+                    kind,
+                    &name,
+                    &self.module_types,
+                    Tracing::NoTraces,
+                    &mut warnings,
+                ) {
+                    Ok(typed_ast) => {
+                        let mut module_types: IndexMap<&String, &TypeInfo> =
+                            self.module_types.iter().collect();
 
-        let mut module_types: IndexMap<&String, &TypeInfo> = self.module_types.iter().collect();
+                        module_types.insert(&name, &typed_ast.type_info);
 
-        module_types.insert(&name, &typed_ast.type_info);
+                        let (tests, validators, functions, data_types) =
+                            self.collect_definitions(name.clone(), typed_ast.definitions());
 
-        let (tests, validators, functions, data_types) =
-            self.collect_definitions(name.clone(), typed_ast.definitions());
+                        let mut generator = CodeGenerator::new(functions, data_types, module_types);
 
-        let mut generator = CodeGenerator::new(functions, data_types, module_types);
+                        run_tests(tests, &mut generator, set_test_results);
 
-        run_tests(tests, &mut generator, set_test_results);
+                        for validator in validators {
+                            let program = generator.generate(validator);
 
-        for validator in validators {
-            let program = generator.generate(validator);
+                            leptos::log!("{}", program.to_pretty());
+                        }
+                    }
+                    Err(err) => set_errors.set(vec![(0, CompilerError::Type(err))]),
+                }
 
-            leptos::log!("{}", program.to_pretty());
+                set_warnings.set(warnings.into_iter().enumerate().collect());
+            }
+            Err(errs) => {
+                set_errors.set(
+                    errs.into_iter()
+                        .map(CompilerError::Parse)
+                        .enumerate()
+                        .collect(),
+                );
+            }
         }
     }
 

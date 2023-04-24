@@ -25,7 +25,7 @@ dependencies = [
 [[package]]
 name = "aiken-lang"
 version = "1.0.2-alpha"
-source = "git+https://github.com/aiken-lang/aiken.git?branch=playground#fda032454c9e91c43bfa7b5fb074ae28bddda994"
+source = "git+https://github.com/aiken-lang/aiken.git?branch=playground#1f043d4ed3df82f70e0aae9bbca961201e0d7e1e"
 dependencies = [
  "chumsky",
  "hex",
@@ -543,7 +543,7 @@ dependencies = [
 [[package]]
 name = "flat-rs"
 version = "1.0.2-alpha"
-source = "git+https://github.com/aiken-lang/aiken.git?branch=playground#fda032454c9e91c43bfa7b5fb074ae28bddda994"
+source = "git+https://github.com/aiken-lang/aiken.git?branch=playground#1f043d4ed3df82f70e0aae9bbca961201e0d7e1e"
 dependencies = [
  "anyhow",
  "thiserror",
@@ -1494,9 +1494,9 @@ checksum = "56d80efc4b6721e8be2a10a5df21a30fa0b470f1539e53d8b4e6e75faf938b63"
 
 [[package]]
 name = "pallas-addresses"
-version = "0.18.0"
+version = "0.18.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8af9e9683d7adb7c45b58bf8949c16af0556214c14b01cac92761b3c221377b9"
+checksum = "185e42a5022488c5bd15fb843d48382ee5d7bc2bfef2454ee8a9dec7ab1fc1eb"
 dependencies = [
  "base58",
  "bech32",
@@ -1508,9 +1508,9 @@ dependencies = [
 
 [[package]]
 name = "pallas-codec"
-version = "0.18.0"
+version = "0.18.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "848a3cd192a1afa0e8c7121e40e0c5991715722399c51359dbf9246443a649fb"
+checksum = "7194c1ee4fa15ba9f40955ee2599449ac648234337af53de7a7322d4d49fce73"
 dependencies = [
  "hex",
  "minicbor",
@@ -1519,9 +1519,9 @@ dependencies = [
 
 [[package]]
 name = "pallas-crypto"
-version = "0.18.0"
+version = "0.18.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f3d7e5248d3c81960fa2a1a430edc54d99601cf963ad7a4da8f9e13808d98c7f"
+checksum = "f7984a500ca763bc88c606d208fa852b691fd946128c31473085da737cd7f73b"
 dependencies = [
  "cryptoxide",
  "hex",
@@ -1533,9 +1533,9 @@ dependencies = [
 
 [[package]]
 name = "pallas-primitives"
-version = "0.18.0"
+version = "0.18.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "286a2d69437c9b3deaa58b8832edce3b80868ca6afeee8aff7d78f338ada9854"
+checksum = "6c8e089d1d1366bd20c7ec79916dae51391b9989dd05efb4d24e10e61ada3880"
 dependencies = [
  "base58",
  "bech32",
@@ -1549,9 +1549,9 @@ dependencies = [
 
 [[package]]
 name = "pallas-traverse"
-version = "0.18.0"
+version = "0.18.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "519f950d87a031770d302fdd510dc0b744c283b65d99a1a9896f399122a9c182"
+checksum = "989aede160bf9d84b598b881d7645cdb5de3cdaa74af7b28d0486a2b8d4eb979"
 dependencies = [
  "hex",
  "pallas-addresses",
@@ -2504,7 +2504,7 @@ checksum = "f962df74c8c05a667b5ee8bcf162993134c104e96440b663c8daa176dc772d8c"
 [[package]]
 name = "uplc"
 version = "1.0.2-alpha"
-source = "git+https://github.com/aiken-lang/aiken.git?branch=playground#fda032454c9e91c43bfa7b5fb074ae28bddda994"
+source = "git+https://github.com/aiken-lang/aiken.git?branch=playground#1f043d4ed3df82f70e0aae9bbca961201e0d7e1e"
 dependencies = [
  "anyhow",
  "cryptoxide",
