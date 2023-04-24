@@ -127,10 +127,13 @@ fn Output(
     warnings: ReadSignal<Vec<(usize, Warning)>>,
 ) -> impl IntoView {
     view! { cx,
-        <div class="p-4 overflow-y-scroll flex flex-col gap-y-11">
+        <div class="p-4 overflow-y-scroll flex grow flex-col gap-y-11">
             <div>
                 <div class="flex items-center mb-5 text-gray-40 gap-x-2 text-lg font-normal">
-                    "Tests" <span class="py-1 px-2 bg-gray-90 rounded text-sm font-semibold">{move || test_results.get().len()}</span>
+                    "Tests"
+                    <span class="py-1 px-2 bg-gray-90 rounded text-sm font-semibold">
+                        {move || test_results.get().len()}
+                    </span>
                 </div>
                 <ul class="flex flex-col gap-y-4">
                     <For
@@ -164,7 +167,10 @@ fn Output(
             </div>
             <div>
                 <div class="flex items-center mb-5 text-gray-40 gap-x-2 text-lg font-normal">
-                    "Warnings" <span class="py-1 px-2 bg-gray-90 rounded text-sm font-semibold">{move || warnings.get().len()}</span>
+                    "Warnings"
+                    <span class="py-1 px-2 bg-gray-90 rounded text-sm font-semibold">
+                        {move || warnings.get().len()}
+                    </span>
                 </div>
                 <ul class="flex flex-col gap-y-4">
                     <For
@@ -179,16 +185,21 @@ fn Output(
                             let help = warning
                                 .help()
                                 .map(|h| {
-                                    view! { cx, <div>"HELP " {h.to_string()}</div> }
+                                    view! { cx,
+                                        <div class="text-gray-70 text-sm flex gap-x-3 items-center">
+                                            <span class="text-blue-40 text-xs">"HELP"</span>
+                                            {h.to_string()}
+                                        </div>
+                                    }
                                 });
                             view! { cx,
                                 <li class="bg-warning-gradient output-item rounded-lg pl-1 overflow-hidden">
-                                    <div class="bg-gray-80 pr-2 pt-2 pb-4 pl-3">
-                                        <div class="flex items-center gap-x-3.5">
+                                    <div class="bg-gray-80 pr-2 pt-2 pb-4 pl-3 flex flex-col gap-y-4">
+                                        <div class="flex items-center gap-x-3.5 text-orange-0">
                                             <LeptosIcon icon=RiIcon::RiAlertSystemLine class="w-3.5 h-3.5"/>
-                                            {code}
+                                            <span class="text-sm">{code}</span>
                                         </div>
-                                        <div>{message}</div>
+                                        <div class="text-gray-70 text-sm">{message}</div>
                                         {help}
                                     </div>
                                 </li>

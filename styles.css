@@ -38,6 +38,10 @@
   color: rgb(217, 217, 217);
 }
 
+.text-orange-0 {
+  color: rgb(248, 174, 97);
+}
+
 .bg-share-button {
   background: linear-gradient(131.15deg, #F7CCFE -8.51%, #660FF7 82.79%);
   box-shadow: 0px 0px 4px #660FF7;
