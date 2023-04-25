@@ -109,13 +109,11 @@ fn CodeEditor(cx: Scope, set_editor: WriteSignal<ModelCell>) -> impl IntoView {
         let div_element: &web_sys::HtmlDivElement = &element;
         let html_element = div_element.unchecked_ref::<web_sys::HtmlElement>();
 
-        let height = document().body().unwrap().client_height() - 56;
-
         let options = CodeEditorOptions::default()
             .with_language("rust".to_string())
             .with_value(INITIAL_CONTENT.to_string())
             .with_builtin_theme(BuiltinTheme::VsDark)
-            .with_new_dimension(784, height);
+            .with_automatic_layout(true);
 
         let e = CodeEditorModel::create(html_element, Some(options));
 
@@ -124,7 +122,7 @@ fn CodeEditor(cx: Scope, set_editor: WriteSignal<ModelCell>) -> impl IntoView {
         });
     });
 
-    view! { cx, <div _ref=node_ref></div> }
+    view! { cx, <div class="w-1/2" _ref=node_ref></div> }
 }
 
 #[component]

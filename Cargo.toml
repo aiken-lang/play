@@ -23,9 +23,9 @@ leptos-icons = { git = "https://github.com/Carlosted/leptos-icons.git", features
     "RiSettings3SystemFill",
     "RiShareForwardSystemFill",
 ] }
-monaco = "0.3.0"
+monaco = { git = "https://github.com/siku2/rust-monaco.git" }
 wasm-bindgen = "0.2.84"
-web-sys = "0.3.61"
+web-sys = { version = "0.3.61" }
 miette = "5.8.0"
 
 [profile.release]
