@@ -22,7 +22,7 @@ fn map(list: List<a>, apply: fn(a) -> b) -> List<b> {
 }
 
 test thing() {
-  [2, 3, @"foo"] == map([1, 2, 3], fn(x) { x + 1 })
+  [2, 3, 4] == map([1, 2, 3], fn(x) { x + 1 })
 }
 
 test other() {
