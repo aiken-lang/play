@@ -5,6 +5,6 @@ The Aiken playground is a fully client side rust web app using [leptos](https://
 ## Development
 
 * `cargo install trunk`
-* `rustup toolchain install nightly`
+* `cargo install --locked cargo-make`
 * `rustup target add wasm32-unknown-unknown`
-* `trunk serve --open`
+* `cargo make dev`
