@@ -18,6 +18,10 @@
   background-color: rgb(65, 153, 235);
 }
 
+.bg-pink {
+  background-color: rgb(247, 48, 144);
+}
+
 .border-gray-40 {
   border-color: rgb(77, 77, 77);
 }
@@ -42,7 +46,7 @@
   color: rgb(248, 174, 97);
 }
 
-.text-pink-0 {
+.text-pink {
   color: rgb(247, 48, 144);
 }
 

@@ -148,10 +148,18 @@ fn Output(
                         view=move |cx, (_, test_result)| {
                             let pass_or_fail = if test_result.success { "PASS" } else { "FAIL" };
                             view! { cx,
-                                <li class="bg-blue-0 output-item rounded-lg pl-1 overflow-hidden">
+                                <li
+                                    class="bg-blue-0 output-item rounded-lg pl-1 overflow-hidden"
+                                    class:bg-pink=!test_result.success
+                                >
                                     <div class="flex items-center justify-between bg-gray-80 pr-2 pt-2 pb-2 pl-3">
                                         <div class="flex items-center gap-x-4">
-                                            <span class="text-blue-40 font-semibold text-xs">{pass_or_fail}</span>
+                                            <span
+                                                class="text-blue-40 font-semibold text-xs"
+                                                class:text-pink=!test_result.success
+                                            >
+                                                {pass_or_fail}
+                                            </span>
                                             <span class="text-white text-sm font-normal">{test_result.name}</span>
                                         </div>
                                         <div class="flex items-center justify-start gap-x-9 text-gray-70 mr-9 text-sm font-normal">
@@ -198,7 +206,7 @@ fn Output(
                             view! { cx,
                                 <li class="bg-error-gradient output-item rounded-lg pl-1 overflow-hidden">
                                     <div class="bg-gray-80 pr-2 pt-2 pb-4 pl-3 flex flex-col gap-y-4">
-                                        <div class="flex items-center gap-x-3.5 text-pink-0">
+                                        <div class="flex items-center gap-x-3.5 text-pink">
                                             <LeptosIcon icon=RiIcon::RiErrorWarningSystemLine class="w-3.5 h-3.5"/>
                                             <span class="text-sm">{code}</span>
                                         </div>
