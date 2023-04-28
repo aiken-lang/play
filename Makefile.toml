@@ -30,4 +30,4 @@ dependencies = ["build-css"]
 [tasks.build-css]
 category = "Build"
 command = "npx"
-args = ["tailwindcss", "-i", "./styles.css", "-o", "./output.css", "--minify"]
+args = ["tailwindcss", "-i", "styles.css", "-o", "output.css", "--minify"]
