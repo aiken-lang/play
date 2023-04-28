@@ -37,40 +37,36 @@ test other() {
 
 const HIGHLIGHTING: &str = r#"
 {
-  "tokenizer": {
-    "root": [
-      ["\/\/.*", "comment"],
-      ["\\b(if|else|when|is|fn|use|let|pub|type|opaque|const|todo|expect|check|test|trace|error|validator)\\b", "keyword"],
-      ["->", "operator"],
-      ["\\|>", "operator"],
-      ["\\.\\.", "operator"],
-      ["(<=|>=|==|!=|<|>)", "operator"],
-      ["(&&|\\|\\|)", "operator"],
-      ["\\|", "operator"],
-      ["(\\+|\\-|/|\\*|%)", "operator"],
-      ["=", "operator"],
-      ["\"", { "token": "string", "nextEmbedded": "allowEmbeddedDoubleQuote", "next": "@string" }],
-      ["\\b(True|False)\\b", "constant.language.boolean"],
-      ["\\b0b[0-1]+\\b", "constant.numeric.binary"],
-      ["\\b0o[0-7]+\\b", "constant.numeric.octal"],
-      ["\\b0x[[:xdigit:]]+\\b", "constant.numeric.hexadecimal"],
-      ["\\b[[:digit:]][[:digit:]_]*(\\.[[:digit:]]*)?\\b", "constant.numeric.decimal"],
-      ["[[:upper:]][[:word:]]*", "entity.name.type"],
-      ["\\b([[:lower:]][[:word:]]*)([[:space:]]*)?\\(", "entity.name.function"],
-      ["\\b([[:lower:]][[:word:]]*):\\s", "variable.parameter"],
-      ["\\b([[:lower:]][[:word:]]*):", "entity.name.namespace"]
+    "keywords": [
+        "if", "else", "when", "is", "fn", "use",
+        "let", "pub", "type", "opaque", "const",
+        "todo", "expect", "check", "test", "trace",
+        "error", "validator"
     ],
-    "string": [
-      ["\\\\.", "string.escape"],
-      ["\"", { "token": "string", "nextEmbedded": "@pop", "next": "@pop" }],
-      ["[^\"]", "string"]
-    ]
-  },
-  "embeddedLanguages": {
-    "allowEmbeddedDoubleQuote": {
-      "embeds": "none"
+    "operators": [
+        "->", "|>", "..", "<=", ">=", "==", "!=", "<", ">", "&&", "||",
+        "|", "+", "-", "/", "*", "%", "="
+    ],
+    "digits": "\\d+(_+\\d+)*",
+	"octaldigits": "[0-7]+(_+[0-7]+)*",
+	"binarydigits": "[0-1]+(_+[0-1]+)*",
+	"hexdigits": "[0-9a-fA-F]+(_+[0-9a-fA-F]+)*",
+    "tokenizer": {
+        "root": [
+            ["[a-z_$][\\w$]*", {
+				"cases": {
+					"@keywords": "keyword",
+					"@default": "identifier"
+				}
+	        }],
+            ["\/\/.*", "comment"],
+            ["[A-Z][\\w$]*", "type.identifier"],
+            ["0[xX](@hexdigits)", "number.hex"],
+			["0[oO]?(@octaldigits)", "number.octal"],
+			["0[bB](@binarydigits)", "number.binary"],
+			["(@digits)", "number"]
+        ]
     }
-  }
 }
 "#;
 
@@ -94,7 +90,15 @@ pub fn CodeEditor(cx: Scope, set_editor: WriteSignal<ModelCell>) -> impl IntoVie
 
     register(&language_extension);
 
-    set_monarch_tokens_provider("aiken", &JSON::parse(HIGHLIGHTING).unwrap());
+    set_monarch_tokens_provider(
+        "aiken",
+        &JSON::parse(HIGHLIGHTING)
+            .map_err(|e| {
+                log!("{:#?}", e);
+                e
+            })
+            .unwrap(),
+    );
 
     node_ref.on_load(cx, move |element| {
         let div_element: &web_sys::HtmlDivElement = &element;
