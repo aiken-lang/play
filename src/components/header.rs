@@ -2,9 +2,15 @@ use leptos::*;
 use leptos_icons::*;
 
 #[component]
-pub fn Header<F>(cx: Scope, on_check: F) -> impl IntoView
+pub fn Header<F1, F2>(
+    cx: Scope,
+    checking: ReadSignal<bool>,
+    on_format: F1,
+    on_check: F2,
+) -> impl IntoView
 where
-    F: Fn(web_sys::MouseEvent) + 'static,
+    F1: Fn(web_sys::MouseEvent) + 'static,
+    F2: Fn(web_sys::MouseEvent) + 'static,
 {
     view! { cx,
         <header class="flex justify-between items-center p-3 border-b border-solid border-gray-40">
@@ -18,10 +24,31 @@ where
             </div>
             <div class="flex gap-x-4">
                 <button
+                    on:click=on_format
+                    class="bg-gray-40 flex justify-center items-center gap-x-2 text-sm font-semibold text-white w-24 py-1.5 rounded"
+                >
+                    <Show
+                        when=move || !checking.get()
+                        fallback=|cx| {
+                            view! { cx, <LeptosIcon icon=RiIcon::RiRefreshSystemLine/> }
+                        }
+                    >
+                        <LeptosIcon icon=RiIcon::RiFileEditDocumentLine/>
+                    </Show>
+                    "Format"
+                </button>
+                <button
                     on:click=on_check
                     class="bg-gray-40 flex justify-center items-center gap-x-2 text-sm font-semibold text-white w-24 py-1.5 rounded"
                 >
-                    <LeptosIcon icon=RiIcon::RiPlayMediaFill/>
+                    <Show
+                        when=move || !checking.get()
+                        fallback=|cx| {
+                            view! { cx, <LeptosIcon icon=RiIcon::RiRefreshSystemLine/> }
+                        }
+                    >
+                        <LeptosIcon icon=RiIcon::RiPlayMediaFill/>
+                    </Show>
                     "Check"
                 </button>
                 <button class="bg-share-button flex justify-center items-center gap-x-2 text-sm font-semibold text-white px-3 py-1.5 rounded">

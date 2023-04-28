@@ -223,3 +223,25 @@ fn run_tests(
         });
     }
 }
+
+pub fn format(src: &str, set_errors: WriteSignal<Vec<(usize, CompilerError)>>) -> Option<String> {
+    match parser::module(src, ModuleKind::Validator) {
+        Ok((ast, extra)) => {
+            let mut output = String::new();
+
+            aiken_lang::format::pretty(&mut output, ast, extra, src);
+
+            Some(output)
+        }
+        Err(errs) => {
+            set_errors.set(
+                errs.into_iter()
+                    .map(CompilerError::Parse)
+                    .enumerate()
+                    .collect(),
+            );
+
+            None
+        }
+    }
+}

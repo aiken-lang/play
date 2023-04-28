@@ -18,8 +18,10 @@ leptos-icons = { git = "https://github.com/Carlosted/leptos-icons.git", features
     "RiDatabase2DeviceLine",
     "RiDiscordLogosFill",
     "RiErrorWarningSystemLine",
+    "RiFileEditDocumentLine",
     "RiGithubLogosFill",
     "RiPlayMediaFill",
+    "RiRefreshSystemLine",
     "RiSettings3SystemFill",
     "RiShareForwardSystemFill",
 ] }
