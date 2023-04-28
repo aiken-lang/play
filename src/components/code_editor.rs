@@ -1,10 +1,15 @@
 use std::{cell::RefCell, rc::Rc};
 
+use js_sys::JSON;
 use leptos::*;
 use monaco::{
     api::{CodeEditor as CodeEditorModel, CodeEditorOptions},
-    sys::editor::BuiltinTheme,
+    sys::{
+        editor::BuiltinTheme,
+        languages::{register, set_monarch_tokens_provider, ILanguageExtensionPoint},
+    },
 };
+use wasm_bindgen::JsValue;
 
 const INITIAL_CONTENT: &str = r#"use aiken/builtin
 
@@ -30,6 +35,37 @@ test other() {
 }
 "#;
 
+const HIGHLIGHTING: &str = r#"
+{
+    "keywords": [
+        "if",
+        "else",
+        "when",
+        "is",
+        "fn",
+        "use",
+        "let",
+        "pub",
+        "type",
+        "opaque",
+        "const",
+        "todo",
+        "expect",
+        "check",
+        "test",
+        "trace",
+        "error",
+        "validator"
+    ],
+    "tokenizer": {
+        "root": [
+            ["//.*", "comment"],
+            ["\".*?\"", "string"]
+        ]
+    }
+}
+"#;
+
 pub type ModelCell = Rc<RefCell<Option<CodeEditorModel>>>;
 
 #[component]
@@ -42,8 +78,22 @@ pub fn CodeEditor(cx: Scope, set_editor: WriteSignal<ModelCell>) -> impl IntoVie
         let div_element: &web_sys::HtmlDivElement = &element;
         let html_element = div_element.unchecked_ref::<web_sys::HtmlElement>();
 
+        let language_extension: ILanguageExtensionPoint = js_sys::Object::new().unchecked_into();
+
+        language_extension.set_id("aiken");
+
+        let extensions = js_sys::Array::new();
+
+        extensions.push(&JsValue::from_str(".ak"));
+
+        language_extension.set_extensions(Some(&extensions));
+
+        register(&language_extension);
+
+        set_monarch_tokens_provider("aiken", &JSON::parse(HIGHLIGHTING).unwrap());
+
         let options = CodeEditorOptions::default()
-            .with_language("rust".to_string())
+            .with_language("aiken".to_string())
             .with_value(INITIAL_CONTENT.to_string())
             .with_builtin_theme(BuiltinTheme::VsDark)
             .with_automatic_layout(true);
