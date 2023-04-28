@@ -60,7 +60,8 @@ const HIGHLIGHTING: &str = r#"
 				}
 	        }],
             ["\/\/.*", "comment"],
-            ["[A-Z][\\w$]*", "type.identifier"],
+            ["[A-Z][\\w\\$]*", "type.identifier"],
+            ["[a-z][\\w\\$]*", "identifier"],
             ["0[xX](@hexdigits)", "number.hex"],
 			["0[oO]?(@octaldigits)", "number.octal"],
 			["0[bB](@binarydigits)", "number.binary"],
