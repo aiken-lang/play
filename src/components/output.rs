@@ -47,11 +47,11 @@ pub fn Output(
                                         <div class="flex items-center justify-start gap-x-9 text-gray-70 mr-9 text-sm font-normal">
                                             <div class="flex items-center gap-x-1">
                                                 <LeptosIcon icon=RiIcon::RiCpuDeviceLine class="w-3.5 h-3.5"/>
-                                                {test_result.spent_budget.mem}
+                                                {test_result.spent_budget.cpu}
                                             </div>
                                             <div class="flex items-center gap-x-1">
                                                 <LeptosIcon icon=RiIcon::RiDatabase2DeviceLine class="w-3.5 h-3.5"/>
-                                                {test_result.spent_budget.cpu}
+                                                {test_result.spent_budget.mem}
                                             </div>
                                         </div>
                                     </div>
