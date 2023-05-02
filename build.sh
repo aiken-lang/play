@@ -6,6 +6,7 @@ rustup target add wasm32-unknown-unknown
 
 cargo install --locked trunk
 
-cargo install --locked cargo-make
+npx tailwindcss -i styles.css -o output.css --minify
 
-cargo make
+trunk build --release
+

@@ -5,7 +5,6 @@ use base64::Engine;
 use leptos::*;
 use leptos_router::*;
 use monaco::api::TextModel;
-use wasm_bindgen::JsValue;
 
 use crate::{
     compiler_error::CompilerError,
