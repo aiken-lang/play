@@ -2,15 +2,17 @@ use leptos::*;
 use leptos_icons::*;
 
 #[component]
-pub fn Header<F1, F2>(
+pub fn Header<F1, F2, F3>(
     cx: Scope,
     checking: ReadSignal<bool>,
     on_format: F1,
     on_check: F2,
+    on_share: F3,
 ) -> impl IntoView
 where
     F1: Fn(web_sys::MouseEvent) + 'static,
     F2: Fn(web_sys::MouseEvent) + 'static,
+    F3: Fn(web_sys::MouseEvent) + 'static,
 {
     view! { cx,
         <header class="flex justify-between items-center p-3 border-b border-solid border-gray-40">
@@ -51,7 +53,10 @@ where
                     </Show>
                     "Check"
                 </button>
-                <button class="bg-share-button flex justify-center items-center gap-x-2 text-sm font-semibold text-white px-3 py-1.5 rounded">
+                <button
+                    on:click=on_share
+                    class="bg-share-button flex justify-center items-center gap-x-2 text-sm font-semibold text-white px-3 py-1.5 rounded"
+                >
                     <LeptosIcon icon=RiIcon::RiShareForwardSystemFill/>
                     "Share"
                 </button>

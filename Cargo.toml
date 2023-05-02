@@ -27,8 +27,8 @@ leptos-icons = { git = "https://github.com/Carlosted/leptos-icons.git", features
 ] }
 leptos_router = { version = "0.2.5", features = ["stable", "csr"] }
 monaco = { git = "https://github.com/siku2/rust-monaco.git" }
-wasm-bindgen = "0.2.84"
-web-sys = { version = "0.3.61" }
+wasm-bindgen = { version = "0.2.84" }
+web-sys = { version = "0.3.61", features = ["Navigator", "Clipboard"] }
 miette = "5.8.0"
 js-sys = "0.3.61"
 base64 = "0.21.0"

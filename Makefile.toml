@@ -1,3 +1,6 @@
+# [env]
+# RUSTFLAGS = "--cfg=web_sys_unstable_apis"
+
 [config]
 skip_core_tasks = true
 
