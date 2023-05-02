@@ -8,15 +8,15 @@ The Aiken playground is a fully client side rust web app using [leptos](https://
 
 - [x] Check code
   - [x] Display warnings
-  - [x] Display Errors  
+  - [x] Display Errors
 - [x] Run tests
-- [ ] Format code
+- [x] Format code
 - [ ] Build validators (working but not surfaced in UI yet)
 - [ ] Share
 
 ## Development
 
-* `cargo install trunk`
-* `cargo install --locked cargo-make`
-* `rustup target add wasm32-unknown-unknown`
-* `cargo make dev`
+- `cargo install trunk`
+- `cargo install --locked cargo-make`
+- `rustup target add wasm32-unknown-unknown`
+- `cargo make dev`
