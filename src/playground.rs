@@ -1,5 +1,6 @@
 use aiken_lang::tipo::error::Warning;
 use leptos::*;
+use leptos_router::*;
 use monaco::api::TextModel;
 
 use crate::{
@@ -11,7 +12,9 @@ use crate::{
 #[component]
 pub fn Playground(cx: Scope) -> impl IntoView {
     let project = Project::new();
+
     let (checking, set_checking) = create_signal(cx, false);
+
     let (editor, set_editor) = create_signal(cx, ModelCell::default());
     let (test_results, set_test_results) = create_signal::<Vec<(usize, TestResult)>>(cx, vec![]);
     let (warnings, set_warnings) = create_signal::<Vec<(usize, Warning)>>(cx, vec![]);
@@ -54,11 +57,13 @@ pub fn Playground(cx: Scope) -> impl IntoView {
     };
 
     view! { cx,
-        <Header checking=checking on_format=run_format on_check=run_check/>
-        <div class="flex grow">
-            <Navigation/>
-            <CodeEditor set_editor=set_editor/>
-            <Output test_results=test_results warnings=warnings errors=errors/>
-        </div>
+        <Router>
+            <Header checking=checking on_format=run_format on_check=run_check/>
+            <div class="flex grow">
+                <Navigation/>
+                <CodeEditor set_editor=set_editor/>
+                <Output test_results=test_results warnings=warnings errors=errors/>
+            </div>
+        </Router>
     }
 }

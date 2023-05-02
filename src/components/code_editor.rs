@@ -1,7 +1,13 @@
-use std::{cell::RefCell, rc::Rc};
+use std::{
+    cell::RefCell,
+    io::{Cursor, Read},
+    rc::Rc,
+};
 
+use base64::Engine;
 use js_sys::JSON;
 use leptos::*;
+use leptos_router::*;
 use monaco::{
     api::{CodeEditor as CodeEditorModel, CodeEditorOptions},
     sys::{
@@ -73,9 +79,16 @@ const HIGHLIGHTING: &str = r#"
 
 pub type ModelCell = Rc<RefCell<Option<CodeEditorModel>>>;
 
+#[derive(Debug, Params, PartialEq)]
+struct CodeQuery {
+    code: Option<String>,
+}
+
 #[component]
 pub fn CodeEditor(cx: Scope, set_editor: WriteSignal<ModelCell>) -> impl IntoView {
     use wasm_bindgen::JsCast;
+
+    let query = use_query::<CodeQuery>(cx);
 
     let node_ref = create_node_ref(cx);
 
@@ -105,9 +118,32 @@ pub fn CodeEditor(cx: Scope, set_editor: WriteSignal<ModelCell>) -> impl IntoVie
         let div_element: &web_sys::HtmlDivElement = &element;
         let html_element = div_element.unchecked_ref::<web_sys::HtmlElement>();
 
+        let initial_content = query.with(|query| {
+            query
+                .as_ref()
+                .ok()
+                .and_then(|query| query.code.clone())
+                .and_then(|code| {
+                    let mut compressed_code = [0u8; 4096];
+                    let compressed_code_byte_len = base64::engine::general_purpose::URL_SAFE_NO_PAD
+                        .decode_slice(code, &mut compressed_code)
+                        .ok()?;
+
+                    let cursor = Cursor::new(compressed_code[..compressed_code_byte_len].to_vec());
+                    let mut decompressor =
+                        brotli::Decompressor::new(cursor, compressed_code_byte_len);
+
+                    let mut code_bytes = [0u8; 4096];
+                    let code_bytes_len = decompressor.read(&mut code_bytes).ok()?;
+
+                    String::from_utf8(code_bytes[..code_bytes_len].to_vec()).ok()
+                })
+                .unwrap_or(INITIAL_CONTENT.to_string())
+        });
+
         let options = CodeEditorOptions::default()
             .with_language("aiken".to_string())
-            .with_value(INITIAL_CONTENT.to_string())
+            .with_value(initial_content)
             .with_builtin_theme(BuiltinTheme::VsDark)
             .with_automatic_layout(true);
 
