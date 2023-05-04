@@ -1,16 +1,12 @@
-use std::io::{Cursor, Write};
-
-use aiken_lang::tipo::error::Warning;
-use base64::Engine;
-use leptos::*;
-use leptos_router::*;
-use monaco::api::TextModel;
-
 use crate::{
     compiler_error::CompilerError,
     components::prelude::*,
     project::{format, Project, TestResult},
 };
+use aiken_lang::tipo::error::Warning;
+use leptos::*;
+use leptos_router::*;
+use monaco::api::TextModel;
 
 #[component]
 pub fn Playground(cx: Scope) -> impl IntoView {
@@ -59,42 +55,14 @@ pub fn Playground(cx: Scope) -> impl IntoView {
         set_checking.set(false);
     };
 
-    let run_share = move |_ev: web_sys::MouseEvent| {
-        let text = editor
-            .get()
-            .borrow()
-            .as_ref()
-            .unwrap()
-            .get_model()
-            .unwrap()
-            .get_value();
-
-        let compressed_code = [0u8; 4096];
-        let cursor = Cursor::new(compressed_code);
-        let mut writer = brotli::CompressorWriter::new(cursor, 4096, 11, 22);
-
-        writer.write_all(text.as_bytes()).ok();
-
-        let cursor = writer.into_inner();
-
-        let bytes_written = cursor.position() as usize;
-
-        let bytes = cursor.into_inner();
-
-        let code = base64::engine::general_purpose::URL_SAFE_NO_PAD.encode(&bytes[..bytes_written]);
-
-        let share_url = format!("https://play.aiken-lang.org?code={}", code);
-
-        let _ = window()
-            .navigator()
-            .clipboard()
-            .unwrap()
-            .write_text(&share_url);
-    };
+    let (share, set_share) = create_signal(cx, false);
+    let toggle_share = move |_| set_share.update(|visible| *visible = !*visible);
+    let hide_share = move |_| set_share.set(false);
 
     view! { cx,
         <Router>
-            <Header checking=checking on_format=run_format on_check=run_check on_share=run_share/>
+            <Header checking=checking on_format=run_format on_check=run_check on_share=toggle_share />
+            <Share display=share editor=editor on_close=hide_share on_cancel=hide_share />
             <div class="flex grow">
                 <Navigation/>
                 <CodeEditor set_editor=set_editor/>
