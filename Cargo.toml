@@ -6,8 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-aiken-lang = { git = "https://github.com/aiken-lang/aiken.git", branch = "playground" }
-uplc = { git = "https://github.com/aiken-lang/aiken.git", branch = "playground" }
+aiken-lang = { git = "https://github.com/aiken-lang/aiken.git" }
+uplc = { git = "https://github.com/aiken-lang/aiken.git" }
 getrandom = { version = "0.2.9", features = ["js"] }
 indexmap = "1.9.2"
 leptos = { version = "0.2.5", features = ["stable"] }

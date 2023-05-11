@@ -24,8 +24,8 @@ dependencies = [
 
 [[package]]
 name = "aiken-lang"
-version = "1.0.2-alpha"
-source = "git+https://github.com/aiken-lang/aiken.git?branch=playground#1f043d4ed3df82f70e0aae9bbca961201e0d7e1e"
+version = "1.0.4-alpha"
+source = "git+https://github.com/aiken-lang/aiken.git#1fb31e246c191247b3e0f504f87829483eee2ff8"
 dependencies = [
  "chumsky",
  "hex",
@@ -260,6 +260,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "23170228b96236b5a7299057ac284a321457700bc8c41a4476052f0f4ba5349d"
 dependencies = [
  "hashbrown",
+ "stacker",
 ]
 
 [[package]]
@@ -584,8 +585,8 @@ dependencies = [
 
 [[package]]
 name = "flat-rs"
-version = "1.0.2-alpha"
-source = "git+https://github.com/aiken-lang/aiken.git?branch=playground#1f043d4ed3df82f70e0aae9bbca961201e0d7e1e"
+version = "1.0.4-alpha"
+source = "git+https://github.com/aiken-lang/aiken.git#1fb31e246c191247b3e0f504f87829483eee2ff8"
 dependencies = [
  "anyhow",
  "thiserror",
@@ -1890,6 +1891,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "psm"
+version = "0.1.21"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5787f7cda34e3033a72192c018bc5883100330f362ef279a8cbccfce8bb4e874"
+dependencies = [
+ "cc",
+]
+
+[[package]]
 name = "quote"
 version = "1.0.26"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2103,6 +2113,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "secp256k1"
+version = "0.26.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4124a35fe33ae14259c490fd70fa199a32b9ce9502f2ee6bc4f81ec06fa65894"
+dependencies = [
+ "secp256k1-sys",
+]
+
+[[package]]
+name = "secp256k1-sys"
+version = "0.8.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "70a129b9e9efbfb223753b9163c4ab3b13cff7fd9c7f010fbac25ab4099fa07e"
+dependencies = [
+ "cc",
+]
+
+[[package]]
 name = "security-framework"
 version = "2.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2297,6 +2325,19 @@ checksum = "37a5be806ab6f127c3da44b7378837ebf01dadca8510a0e572460216b228bd0e"
 dependencies = [
  "base64ct",
  "der",
+]
+
+[[package]]
+name = "stacker"
+version = "0.1.15"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c886bd4480155fd3ef527d45e9ac8dd7118a898a46530b7b94c3e21866259fce"
+dependencies = [
+ "cc",
+ "cfg-if",
+ "libc",
+ "psm",
+ "winapi",
 ]
 
 [[package]]
@@ -2578,8 +2619,8 @@ checksum = "f962df74c8c05a667b5ee8bcf162993134c104e96440b663c8daa176dc772d8c"
 
 [[package]]
 name = "uplc"
-version = "1.0.2-alpha"
-source = "git+https://github.com/aiken-lang/aiken.git?branch=playground#1f043d4ed3df82f70e0aae9bbca961201e0d7e1e"
+version = "1.0.4-alpha"
+source = "git+https://github.com/aiken-lang/aiken.git#1fb31e246c191247b3e0f504f87829483eee2ff8"
 dependencies = [
  "anyhow",
  "cryptoxide",
@@ -2600,6 +2641,7 @@ dependencies = [
  "peg",
  "pretty",
  "pretty_assertions",
+ "secp256k1",
  "serde",
  "serde_json",
  "strum",
