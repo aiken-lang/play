@@ -75,6 +75,23 @@ pub fn Playground(cx: Scope) -> impl IntoView {
             </div>
             <div class="grow text-left md:hidden text-gray-0 pt-4 px-4">
                 "The playground is not optimized for small screens. You're probably using a mobile device, please come back on desktop to try out the playground."
+                <ul class="pt-4 px-4 flex flex-col gap-y-2 underline text-blue-40 list-disc">
+                    <li>
+                        <a target="_blank" href="https://aiken-lang.org/installation-instructions">
+                            "Install"
+                        </a>
+                    </li>
+                    <li>
+                        <a target="_blank" href="https://discord.gg/Vc3x8N9nz2">
+                            "Discord"
+                        </a>
+                    </li>
+                    <li>
+                        <a target="_blank" href="https://github.com/aiken-lang">
+                            "Website"
+                        </a>
+                    </li>
+                </ul>
             </div>
         </Router>
     }
