@@ -61,12 +61,20 @@ pub fn Playground(cx: Scope) -> impl IntoView {
 
     view! { cx,
         <Router>
-            <Header checking=checking on_format=run_format on_check=run_check on_share=toggle_share />
-            <Share display=share editor=editor on_close=hide_share on_cancel=hide_share />
-            <div class="flex grow">
+            <Header
+                checking=checking
+                on_format=run_format
+                on_check=run_check
+                on_share=toggle_share
+            />
+            <Share display=share editor=editor on_close=hide_share on_cancel=hide_share/>
+            <div class="grow hidden md:flex">
                 <Navigation/>
                 <CodeEditor set_editor=set_editor/>
                 <Output test_results=test_results warnings=warnings errors=errors/>
+            </div>
+            <div class="grow text-left md:hidden text-gray-0 pt-4 px-4">
+                "The playground is not optimized for small screens. You're probably using a mobile device, please come back on desktop to try out the playground."
             </div>
         </Router>
     }

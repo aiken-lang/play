@@ -46,33 +46,39 @@ where
             class="fixed inset-0 z-10 overflow-y-auto h-full w-full bg-black opacity-30"
             hidden=move || !display.get()
             on:click=on_cancel
-        >
-        </div>
+        ></div>
         <aside
             class="fixed top-1/4 inset-x-1/4 z-10 rounded bg-neutral-800 drop-shadow-md text-white"
             hidden=move || !display.get()
         >
-          <div class="grid grid-cols-2 px-5 py-3">
-            <h2 class="text-lg font-semibold">"SHARE"</h2>
-            <button class="justify-self-end" on:click=on_close >
-              <LeptosIcon icon=RiIcon::RiCloseSystemLine class="w-6 h-6"/>
-            </button>
-          </div>
-          <hr class="border-1 border-gray-500"/>
-          <div class="px-5 p-3">
-            <p>"Share a"<strong>" snapshot "</strong>"of your playground with this link."</p>
-            <fieldset class="flex container inset-0 my-3">
-              <button class="flex items-center gap-x-2 p-2 bg-share-button rounded-l-md" on:click=on_copy>
-                <LeptosIcon icon=RiIcon::RiClipboardDocumentLine class="w-4 h-4"/>
-                { copy_text }
-            </button>
-              <input class="w-full px-3 text-purple-200 bg-neutral-600 rounded-r-md" type="text" value={share_url}/>
-            </fieldset>
-            <p class="text-sm text-gray-300">
-                "This link will open a new playground in the same state as yours is. "
-                "Use it to share snippets of Aiken code and to make it easy for people to elaborate on your code."
-            </p>
-          </div>
+            <div class="grid grid-cols-2 px-5 py-3">
+                <h2 class="text-lg font-semibold">"SHARE"</h2>
+                <button class="justify-self-end" on:click=on_close>
+                    <LeptosIcon icon=RiIcon::RiCloseSystemLine class="w-6 h-6"/>
+                </button>
+            </div>
+            <hr class="border-1 border-gray-500"/>
+            <div class="px-5 p-3">
+                <p>"Share a" <strong>" snapshot "</strong> "of your playground with this link."</p>
+                <fieldset class="flex container inset-0 my-3">
+                    <button
+                        class="flex items-center gap-x-2 p-2 bg-share-button rounded-l-md"
+                        on:click=on_copy
+                    >
+                        <LeptosIcon icon=RiIcon::RiClipboardDocumentLine class="w-4 h-4"/>
+                        {copy_text}
+                    </button>
+                    <input
+                        class="w-full px-3 text-purple-200 bg-neutral-600 rounded-r-md"
+                        type="text"
+                        value=share_url
+                    />
+                </fieldset>
+                <p class="text-sm text-gray-300">
+                    "This link will open a new playground in the same state as yours is. "
+                    "Use it to share snippets of Aiken code and to make it easy for people to elaborate on your code."
+                </p>
+            </div>
         </aside>
     }
 }

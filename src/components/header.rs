@@ -24,7 +24,7 @@ where
                 />
                 <span class="text-white text-lg font-semibold">"AIKEN PLAYGROUND"</span>
             </div>
-            <div class="flex gap-x-4">
+            <div class="gap-x-4 hidden md:flex">
                 <button
                     on:click=on_format
                     class="bg-gray-40 flex justify-center items-center gap-x-2 text-sm font-semibold text-white w-24 py-1.5 rounded"
