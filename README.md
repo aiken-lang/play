@@ -11,8 +11,8 @@ The Aiken playground is a fully client side rust web app using [leptos](https://
   - [x] Display Errors
 - [x] Run tests
 - [x] Format code
+- [x] Share
 - [ ] Build validators (working but not surfaced in UI yet)
-- [ ] Share
 
 ## Development
 
