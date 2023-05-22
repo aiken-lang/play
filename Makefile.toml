@@ -6,6 +6,7 @@ alias = "build"
 
 [tasks.dev]
 category = "Dev"
+dependencies = ["setup-stdlib"]
 run_task = { name = ["dev-css", "dev-trunk"], fork = true, parallel = true }
 
 [tasks.dev-trunk]
@@ -25,9 +26,29 @@ category = "Build"
 install_crate = "trunk"
 command = "trunk"
 args = ["build", "--release"]
-dependencies = ["build-css"]
+dependencies = ["setup-stdlib", "build-css"]
 
 [tasks.build-css]
 category = "Build"
 command = "npx"
 args = ["tailwindcss", "-i", "styles.css", "-o", "output.css", "--minify"]
+
+[tasks.setup-stdlib]
+category = "Setup"
+script_runner = "@shell"
+script = '''
+[ -d "stdlib" ] && echo "stdlib already setup." && exit 0
+
+mkdir stdlib
+
+curl -L \
+  -H "Accept: application/vnd.github+json" \
+  -H "X-GitHub-Api-Version: 2022-11-28" \
+  https://api.github.com/repos/aiken-lang/stdlib/tarball/main \
+  -o stdlib.tar
+
+tar -xvf stdlib.tar --strip-components 1 -C stdlib
+
+rm stdlib.tar
+'''
+

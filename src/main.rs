@@ -4,6 +4,7 @@ mod compiler_error;
 mod components;
 mod playground;
 mod project;
+mod stdlib;
 
 use playground::{Playground, PlaygroundProps};
 

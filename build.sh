@@ -8,5 +8,17 @@ cargo install --locked trunk
 
 npx tailwindcss -i ./styles.css -o ./output.css --minify
 
+mkdir stdlib
+
+curl -L \
+  -H "Accept: application/vnd.github+json" \
+  -H "X-GitHub-Api-Version: 2022-11-28" \
+  https://api.github.com/repos/aiken-lang/stdlib/tarball/main \
+  -o stdlib.tar
+
+tar -xvf stdlib.tar --strip-components 1 -C stdlib
+
+rm stdlib.tar
+
 trunk build --release
 

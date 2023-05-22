@@ -15,13 +15,13 @@ use aiken_lang::{
     IdGenerator,
 };
 use indexmap::IndexMap;
-use leptos::{SignalSet, SignalUpdate, WriteSignal};
+use leptos::{log, SignalSet, SignalUpdate, WriteSignal};
 use uplc::{
     ast::{NamedDeBruijn, Program},
     machine::cost_model::ExBudget,
 };
 
-use crate::compiler_error::CompilerError;
+use crate::{compiler_error::CompilerError, stdlib};
 
 pub struct EvalHint {
     pub bin_op: BinOp,
@@ -52,8 +52,61 @@ impl Project {
         module_types.insert("aiken".to_string(), builtins::prelude(&id_gen));
         module_types.insert("aiken/builtin".to_string(), builtins::plutus(&id_gen));
 
-        let functions = builtins::prelude_functions(&id_gen);
-        let data_types = builtins::prelude_data_types(&id_gen);
+        let mut functions = builtins::prelude_functions(&id_gen);
+        let mut data_types = builtins::prelude_data_types(&id_gen);
+
+        for (module_name, module_src) in stdlib::MODULES {
+            let (mut ast, _extra) = parser::module(module_src, ModuleKind::Lib).unwrap();
+
+            ast.name = module_name.to_string();
+
+            let mut warnings = vec![];
+
+            let typed_ast = ast
+                .infer(
+                    &id_gen,
+                    ModuleKind::Lib,
+                    module_name,
+                    &module_types,
+                    Tracing::NoTraces,
+                    &mut warnings,
+                )
+                .map_err(|e| {
+                    log!("{}", e);
+                })
+                .unwrap();
+
+            for def in typed_ast.definitions.into_iter() {
+                match def {
+                    Definition::Fn(func) => {
+                        functions.insert(
+                            FunctionAccessKey {
+                                module_name: module_name.to_string(),
+                                function_name: func.name.clone(),
+                                variant_name: "".to_string(),
+                            },
+                            func,
+                        );
+                    }
+                    Definition::DataType(data) => {
+                        data_types.insert(
+                            DataTypeKey {
+                                module_name: module_name.to_string(),
+                                defined_type: "".to_string(),
+                            },
+                            data,
+                        );
+                    }
+                    Definition::TypeAlias(_)
+                    | Definition::Use(_)
+                    | Definition::ModuleConstant(_)
+                    | Definition::Test(_)
+                    | Definition::Validator(_) => (),
+                }
+            }
+
+            module_types.insert(module_name.to_string(), typed_ast.type_info);
+        }
 
         Project {
             id_gen,
