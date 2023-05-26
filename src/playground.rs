@@ -12,8 +12,6 @@ use monaco::api::TextModel;
 pub fn Playground(cx: Scope) -> impl IntoView {
     let project = Project::new();
 
-    let (checking, set_checking) = create_signal(cx, false);
-
     let (editor, set_editor) = create_signal(cx, ModelCell::default());
     let (test_results, set_test_results) = create_signal::<Vec<(usize, TestResult)>>(cx, vec![]);
     let (warnings, set_warnings) = create_signal::<Vec<(usize, Warning)>>(cx, vec![]);
@@ -36,7 +34,7 @@ pub fn Playground(cx: Scope) -> impl IntoView {
         };
     };
 
-    let run_check = move |_ev: web_sys::MouseEvent| {
+    let check_action = create_action(cx, move |_: &()| {
         let text = editor
             .get()
             .borrow()
@@ -46,14 +44,20 @@ pub fn Playground(cx: Scope) -> impl IntoView {
             .unwrap()
             .get_value();
 
-        set_checking.set(true);
         set_test_results.set(vec![]);
         set_warnings.set(vec![]);
         set_errors.set(vec![]);
 
-        project.build(&text, set_warnings, set_errors, set_test_results);
-        set_checking.set(false);
-    };
+        let project = project.clone();
+
+        async move {
+            project
+                .borrow_mut()
+                .build(&text, set_warnings, set_errors, set_test_results);
+        }
+    });
+
+    let run_check = move |_ev: web_sys::MouseEvent| check_action.dispatch(());
 
     let (share, set_share) = create_signal(cx, false);
     let toggle_share = move |_| set_share.update(|visible| *visible = !*visible);
@@ -62,7 +66,7 @@ pub fn Playground(cx: Scope) -> impl IntoView {
     view! { cx,
         <Router>
             <Header
-                checking=checking
+                checking=check_action
                 on_format=run_format
                 on_check=run_check
                 on_share=toggle_share

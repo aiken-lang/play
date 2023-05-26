@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{cell::RefCell, collections::HashMap, rc::Rc};
 
 use aiken_lang::{
     ast::{
@@ -29,11 +29,13 @@ pub struct EvalHint {
     pub right: Program<NamedDeBruijn>,
 }
 
+#[derive(Clone)]
 pub struct Project {
     id_gen: IdGenerator,
     module_types: HashMap<String, TypeInfo>,
     functions: IndexMap<FunctionAccessKey, TypedFunction>,
     data_types: IndexMap<DataTypeKey, TypedDataType>,
+    is_stdlib_setup: bool,
 }
 
 #[derive(Clone)]
@@ -45,84 +47,37 @@ pub struct TestResult {
 }
 
 impl Project {
-    pub fn new() -> Self {
+    pub fn new() -> Rc<RefCell<Self>> {
         let id_gen = IdGenerator::new();
 
         let mut module_types = HashMap::new();
         module_types.insert("aiken".to_string(), builtins::prelude(&id_gen));
         module_types.insert("aiken/builtin".to_string(), builtins::plutus(&id_gen));
 
-        let mut functions = builtins::prelude_functions(&id_gen);
-        let mut data_types = builtins::prelude_data_types(&id_gen);
+        let functions = builtins::prelude_functions(&id_gen);
+        let data_types = builtins::prelude_data_types(&id_gen);
 
-        for (module_name, module_src) in stdlib::MODULES {
-            let (mut ast, _extra) = parser::module(module_src, ModuleKind::Lib).unwrap();
-
-            ast.name = module_name.to_string();
-
-            let mut warnings = vec![];
-
-            let typed_ast = ast
-                .infer(
-                    &id_gen,
-                    ModuleKind::Lib,
-                    module_name,
-                    &module_types,
-                    Tracing::NoTraces,
-                    &mut warnings,
-                )
-                .map_err(|e| {
-                    log!("{}", e);
-                })
-                .unwrap();
-
-            for def in typed_ast.definitions.into_iter() {
-                match def {
-                    Definition::Fn(func) => {
-                        functions.insert(
-                            FunctionAccessKey {
-                                module_name: module_name.to_string(),
-                                function_name: func.name.clone(),
-                                variant_name: "".to_string(),
-                            },
-                            func,
-                        );
-                    }
-                    Definition::DataType(data) => {
-                        data_types.insert(
-                            DataTypeKey {
-                                module_name: module_name.to_string(),
-                                defined_type: "".to_string(),
-                            },
-                            data,
-                        );
-                    }
-                    Definition::TypeAlias(_)
-                    | Definition::Use(_)
-                    | Definition::ModuleConstant(_)
-                    | Definition::Test(_)
-                    | Definition::Validator(_) => (),
-                }
-            }
-
-            module_types.insert(module_name.to_string(), typed_ast.type_info);
-        }
-
-        Project {
+        RefCell::new(Project {
             id_gen,
             module_types,
             functions,
             data_types,
-        }
+            is_stdlib_setup: false,
+        })
+        .into()
     }
 
     pub fn build(
-        &self,
+        &mut self,
         source_code: &str,
         set_warnings: WriteSignal<Vec<(usize, Warning)>>,
         set_errors: WriteSignal<Vec<(usize, CompilerError)>>,
         set_test_results: WriteSignal<Vec<(usize, TestResult)>>,
     ) {
+        if !self.is_stdlib_setup {
+            self.setup_stdlib();
+        }
+
         let kind = ModuleKind::Validator;
 
         match parser::module(source_code, kind) {
@@ -228,6 +183,64 @@ impl Project {
         }
 
         (tests, validators, functions, data_types)
+    }
+
+    pub fn setup_stdlib(&mut self) {
+        for (module_name, module_src) in stdlib::MODULES {
+            let (mut ast, _extra) = parser::module(module_src, ModuleKind::Lib).unwrap();
+
+            ast.name = module_name.to_string();
+
+            let mut warnings = vec![];
+
+            let typed_ast = ast
+                .infer(
+                    &self.id_gen,
+                    ModuleKind::Lib,
+                    module_name,
+                    &self.module_types,
+                    Tracing::NoTraces,
+                    &mut warnings,
+                )
+                .map_err(|e| {
+                    log!("{}", e);
+                })
+                .unwrap();
+
+            for def in typed_ast.definitions.into_iter() {
+                match def {
+                    Definition::Fn(func) => {
+                        self.functions.insert(
+                            FunctionAccessKey {
+                                module_name: module_name.to_string(),
+                                function_name: func.name.clone(),
+                                variant_name: "".to_string(),
+                            },
+                            func,
+                        );
+                    }
+                    Definition::DataType(data) => {
+                        self.data_types.insert(
+                            DataTypeKey {
+                                module_name: module_name.to_string(),
+                                defined_type: "".to_string(),
+                            },
+                            data,
+                        );
+                    }
+                    Definition::TypeAlias(_)
+                    | Definition::Use(_)
+                    | Definition::ModuleConstant(_)
+                    | Definition::Test(_)
+                    | Definition::Validator(_) => (),
+                }
+            }
+
+            self.module_types
+                .insert(module_name.to_string(), typed_ast.type_info);
+        }
+
+        self.is_stdlib_setup = true
     }
 }
 

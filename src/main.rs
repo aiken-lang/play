@@ -6,7 +6,7 @@ mod playground;
 mod project;
 mod stdlib;
 
-use playground::{Playground, PlaygroundProps};
+use playground::Playground;
 
 fn main() {
     mount_to_body(|cx| {

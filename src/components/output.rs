@@ -46,11 +46,11 @@ pub fn Output(
                                         </div>
                                         <div class="flex items-center justify-start gap-x-9 text-gray-70 mr-9 text-sm font-normal">
                                             <div class="flex items-center gap-x-1">
-                                                <LeptosIcon icon=RiIcon::RiCpuDeviceLine class="w-3.5 h-3.5"/>
+                                                <Icon icon=RiIcon::RiCpuDeviceLine class="w-3.5 h-3.5"/>
                                                 {test_result.spent_budget.cpu}
                                             </div>
                                             <div class="flex items-center gap-x-1">
-                                                <LeptosIcon icon=RiIcon::RiDatabase2DeviceLine class="w-3.5 h-3.5"/>
+                                                <Icon icon=RiIcon::RiDatabase2DeviceLine class="w-3.5 h-3.5"/>
                                                 {test_result.spent_budget.mem}
                                             </div>
                                         </div>
@@ -89,7 +89,7 @@ pub fn Output(
                                 <li class="bg-error-gradient output-item rounded-lg pl-1 overflow-hidden">
                                     <div class="bg-gray-80 pr-2 pt-2 pb-4 pl-3 flex flex-col gap-y-4">
                                         <div class="flex items-center gap-x-3.5 text-pink">
-                                            <LeptosIcon icon=RiIcon::RiErrorWarningSystemLine class="w-3.5 h-3.5"/>
+                                            <Icon icon=RiIcon::RiErrorWarningSystemLine class="w-3.5 h-3.5"/>
                                             <span class="text-sm">{code}</span>
                                         </div>
                                         <div class="text-gray-70 text-sm">{message}</div>
@@ -131,7 +131,7 @@ pub fn Output(
                                 <li class="bg-warning-gradient output-item rounded-lg pl-1 overflow-hidden">
                                     <div class="bg-gray-80 pr-2 pt-2 pb-4 pl-3 flex flex-col gap-y-4">
                                         <div class="flex items-center gap-x-3.5 text-orange-0">
-                                            <LeptosIcon icon=RiIcon::RiAlertSystemLine class="w-3.5 h-3.5"/>
+                                            <Icon icon=RiIcon::RiAlertSystemLine class="w-3.5 h-3.5"/>
                                             <span class="text-sm">{code}</span>
                                         </div>
                                         <div class="text-gray-70 text-sm">{message}</div>

@@ -54,7 +54,7 @@ where
             <div class="grid grid-cols-2 px-5 py-3">
                 <h2 class="text-lg font-semibold">"SHARE"</h2>
                 <button class="justify-self-end" on:click=on_close>
-                    <LeptosIcon icon=RiIcon::RiCloseSystemLine class="w-6 h-6"/>
+                    <Icon icon=RiIcon::RiCloseSystemLine class="w-6 h-6"/>
                 </button>
             </div>
             <hr class="border-1 border-gray-500"/>
@@ -65,7 +65,7 @@ where
                         class="flex items-center gap-x-2 p-2 bg-share-button rounded-l-md"
                         on:click=on_copy
                     >
-                        <LeptosIcon icon=RiIcon::RiClipboardDocumentLine class="w-4 h-4"/>
+                        <Icon icon=RiIcon::RiClipboardDocumentLine class="w-4 h-4"/>
                         {copy_text}
                     </button>
                     <input

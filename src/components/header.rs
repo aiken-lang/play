@@ -2,14 +2,16 @@ use leptos::*;
 use leptos_icons::*;
 
 #[component]
-pub fn Header<F1, F2, F3>(
+pub fn Header<F1, F2, F3, I, O>(
     cx: Scope,
-    checking: ReadSignal<bool>,
+    checking: Action<I, O>,
     on_format: F1,
     on_check: F2,
     on_share: F3,
 ) -> impl IntoView
 where
+    I: 'static,
+    O: 'static,
     F1: Fn(web_sys::MouseEvent) + 'static,
     F2: Fn(web_sys::MouseEvent) + 'static,
     F3: Fn(web_sys::MouseEvent) + 'static,
@@ -30,12 +32,12 @@ where
                     class="bg-gray-40 flex justify-center items-center gap-x-2 text-sm font-semibold text-white w-24 py-1.5 rounded"
                 >
                     <Show
-                        when=move || !checking.get()
+                        when=move || !checking.pending().get()
                         fallback=|cx| {
-                            view! { cx, <LeptosIcon icon=RiIcon::RiRefreshSystemLine/> }
+                            view! { cx, <Icon icon=RiIcon::RiRefreshSystemLine/> }
                         }
                     >
-                        <LeptosIcon icon=RiIcon::RiFileEditDocumentLine/>
+                        <Icon icon=RiIcon::RiFileEditDocumentLine/>
                     </Show>
                     "Format"
                 </button>
@@ -43,21 +45,20 @@ where
                     on:click=on_check
                     class="bg-gray-40 flex justify-center items-center gap-x-2 text-sm font-semibold text-white w-24 py-1.5 rounded"
                 >
-                    <Show
-                        when=move || !checking.get()
-                        fallback=|cx| {
-                            view! { cx, <LeptosIcon icon=RiIcon::RiRefreshSystemLine/> }
+                    {move || {
+                        if checking.pending().get() {
+                            view! { cx, <Icon icon=RiIcon::RiRefreshSystemLine/> }
+                        } else {
+                            view! { cx, <Icon icon=RiIcon::RiPlayMediaFill/> }
                         }
-                    >
-                        <LeptosIcon icon=RiIcon::RiPlayMediaFill/>
-                    </Show>
+                    }}
                     "Check"
                 </button>
                 <button
                     on:click=on_share
                     class="bg-share-button flex justify-center items-center gap-x-2 text-sm font-semibold text-white px-3 py-1.5 rounded"
                 >
-                    <LeptosIcon icon=RiIcon::RiShareForwardSystemFill/>
+                    <Icon icon=RiIcon::RiShareForwardSystemFill/>
                     "Share"
                 </button>
             </div>
