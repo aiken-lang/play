@@ -17,27 +17,30 @@ use monaco::{
 };
 use wasm_bindgen::JsValue;
 
-const INITIAL_CONTENT: &str = r#"use aiken/builtin
+const INITIAL_CONTENT: &str = r#"use aiken/list
 
-validator {
-  fn hello(_d: Data, _r: Data, ctx: Data) -> Bool {
-    True
+fn quicksort(xs: List<Int>) -> List<Int> {
+  when xs is {
+    [] ->
+      []
+    [p, ..tail] -> {
+      let before = tail |> list.filter(fn(x) { x < p }) |> quicksort
+      let after = tail |> list.filter(fn(x) { x >= p }) |> quicksort
+      list.concat(before, [p, ..after])
+    }
   }
 }
 
-fn map(list: List<a>, apply: fn(a) -> b) -> List<b> {
-  when list is {
-    [] -> []
-    [x, ..xs] -> [apply(x), ..map(xs, apply)]
-  }
+test quicksort_0() {
+  quicksort([]) == []
 }
 
-test thing() {
-  [2, 3, 4] == map([1, 2, 3], fn(x) { x + 1 })
+test quicksort_1() {
+  quicksort([3, 2, 1, 4]) == [1, 2, 3, 4]
 }
 
-test other() {
-  builtin.add_integer(1, 2) == 3
+test quicksort_2() {
+  quicksort([1, 2, 3, 4]) == [1, 2, 3, 4]
 }
 "#;
 
