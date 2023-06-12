@@ -280,7 +280,7 @@ fn run_tests(
             t.push((
                 index,
                 TestResult {
-                    success: !eval_result.failed(),
+                    success: !eval_result.failed(test.can_error),
                     spent_budget: eval_result.cost(),
                     logs: eval_result.logs(),
                     name: test.name.clone(),
