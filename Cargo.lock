@@ -30,9 +30,9 @@ dependencies = [
 
 [[package]]
 name = "aiken-lang"
-version = "1.0.8-alpha"
+version = "1.0.10-alpha"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0817be598e4f35ce8265cfe0eb8edcb55e5c5ca7bed9adfdb239660a762ae5ef"
+checksum = "f3bbf0f28d92598221900e8f9a0b7f6542da2645dae31d0c49e91b7d772530a2"
 dependencies = [
  "chumsky",
  "hex",
@@ -537,9 +537,9 @@ dependencies = [
 
 [[package]]
 name = "flat-rs"
-version = "1.0.8-alpha"
+version = "1.0.10-alpha"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8cfa3ee33c9d8356b3dd737fa9ea34dab18920caa4a0ca69342f9a77aea45bf7"
+checksum = "0df597a48ec8229eec30921b68ac590e94746214bcc02dfa40f282418186ac3c"
 dependencies = [
  "anyhow",
  "thiserror",
@@ -2371,9 +2371,9 @@ checksum = "f962df74c8c05a667b5ee8bcf162993134c104e96440b663c8daa176dc772d8c"
 
 [[package]]
 name = "uplc"
-version = "1.0.8-alpha"
+version = "1.0.10-alpha"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "64edefc532a43eee781d47c79f7a46c74edb1dcb31eb5a38839196d965c30956"
+checksum = "b62fea0272ac369a88d6c1e04261055e2737ca12ab1f84ab645a0b7bff9eeca7"
 dependencies = [
  "anyhow",
  "cryptoxide",
