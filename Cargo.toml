@@ -36,6 +36,7 @@ miette = "5.8.0"
 js-sys = "0.3.61"
 base64 = "0.21.0"
 brotli = "3.3.4"
+console_error_panic_hook = "0.1.7"
 
 [profile.release]
 codegen-units = 1

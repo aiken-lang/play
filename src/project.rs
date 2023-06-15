@@ -109,9 +109,7 @@ impl Project {
                         run_tests(tests, &mut generator, set_test_results);
 
                         for validator in validators {
-                            let program = generator.generate(validator);
-
-                            leptos::log!("{}", program.to_pretty());
+                            let _program = generator.generate(validator);
                         }
                     }
                     Err(err) => set_errors.set(vec![(0, CompilerError::Type(err))]),
@@ -223,7 +221,7 @@ impl Project {
                         self.data_types.insert(
                             DataTypeKey {
                                 module_name: module_name.to_string(),
-                                defined_type: "".to_string(),
+                                defined_type: data.name.clone(),
                             },
                             data,
                         );
