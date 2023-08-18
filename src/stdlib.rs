@@ -1,4 +1,4 @@
-pub const MODULES: [(&str, &str); 13] = [
+pub const MODULES: [(&str, &str); 14] = [
     (
         "aiken/option",
         include_str!("../stdlib/lib/aiken/option.ak"),
@@ -17,6 +17,10 @@ pub const MODULES: [(&str, &str); 13] = [
     ("aiken/dict", include_str!("../stdlib/lib/aiken/dict.ak")),
     ("aiken/int", include_str!("../stdlib/lib/aiken/int.ak")),
     ("aiken/list", include_str!("../stdlib/lib/aiken/list.ak")),
+    (
+        "aiken/math/rational",
+        include_str!("../stdlib/lib/aiken/math/rational.ak"),
+    ),
     (
         "aiken/transaction/credential",
         include_str!("../stdlib/lib/aiken/transaction/credential.ak"),

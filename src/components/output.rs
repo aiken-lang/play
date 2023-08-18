@@ -13,9 +13,51 @@ pub fn Output(
     test_results: ReadSignal<Vec<(usize, TestResult)>>,
     warnings: ReadSignal<Vec<(usize, Warning)>>,
     errors: ReadSignal<Vec<(usize, CompilerError)>>,
+    validators: ReadSignal<Vec<(usize, String, String)>>,
 ) -> impl IntoView {
     view! { cx,
         <div class="p-4 overflow-y-scroll flex grow flex-col gap-y-11">
+            <div>
+                <div class="flex items-center mb-5 text-gray-40 gap-x-2 text-lg font-normal">
+                    "Validators"
+                    <span class="py-1 px-2 bg-gray-90 rounded text-sm font-semibold">
+                        {move || validators.get().len()}
+                    </span>
+                </div>
+                <ul class="flex flex-col gap-y-4">
+                    <For
+                        each=move || validators.get()
+                        key=|validator| validator.0
+                        view=move |cx, (_, name, program)| {
+                            view! { cx,
+                                <li class="bg-blue-0 output-item rounded-lg pl-1 overflow-hidden">
+                                    <div class="flex gap-x-4 items-center justify-start bg-gray-80 pr-2 pt-2 pb-2 pl-3">
+                                        <div>
+                                            <span class="text-blue-40 font-semibold text-xs">{name}</span>
+                                        </div>
+                                        <div class="flex items-center justify-between text-gray-70 text-sm font-normal w-full">
+                                            <input
+                                                class="w-full px-2 py-1 text-purple-200 bg-neutral-600 rounded"
+                                                type="text"
+                                                disabled=true
+                                                value=program.clone()
+                                            />
+                                            <button
+                                                class="flex items-center px-2 py-y"
+                                                on:click=move |_| {
+                                                    let _ = window().navigator().clipboard().unwrap().write_text(&program);
+                                                }
+                                            >
+                                                <Icon icon=RiIcon::RiClipboardDocumentLine class="w-2 h-full"/>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                        }
+                    />
+                </ul>
+            </div>
             <div>
                 <div class="flex items-center mb-5 text-gray-40 gap-x-2 text-lg font-normal">
                     "Tests"

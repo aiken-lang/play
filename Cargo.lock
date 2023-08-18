@@ -30,9 +30,9 @@ dependencies = [
 
 [[package]]
 name = "aiken-lang"
-version = "1.0.10-alpha"
+version = "1.0.14-alpha"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f3bbf0f28d92598221900e8f9a0b7f6542da2645dae31d0c49e91b7d772530a2"
+checksum = "aafa410cbb1383e3113e4bda9a98528ce14544a6cc80b53ffecc410b2fb21568"
 dependencies = [
  "chumsky",
  "hex",
@@ -547,9 +547,9 @@ dependencies = [
 
 [[package]]
 name = "flat-rs"
-version = "1.0.10-alpha"
+version = "1.0.14-alpha"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0df597a48ec8229eec30921b68ac590e94746214bcc02dfa40f282418186ac3c"
+checksum = "d38facaff41d2a6bfdc0a2e4028a7772ad03df69882c2b920fd9bf219b533b27"
 dependencies = [
  "anyhow",
  "thiserror",
@@ -1204,9 +1204,9 @@ checksum = "2dffe52ecf27772e601905b7522cb4ef790d2cc203488bbd0e2fe85fcb74566d"
 
 [[package]]
 name = "miette"
-version = "5.8.0"
+version = "5.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "92a992891d5579caa9efd8e601f82e30a1caa79a27a5db075dde30ecb9eab357"
+checksum = "59bb584eaeeab6bd0226ccf3509a69d7936d148cf3d036ad350abe35e8c6856e"
 dependencies = [
  "miette-derive",
  "once_cell",
@@ -1216,9 +1216,9 @@ dependencies = [
 
 [[package]]
 name = "miette-derive"
-version = "5.8.0"
+version = "5.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4c65c625186a9bcce6699394bee511e1b1aec689aa7e3be1bf4e996e75834153"
+checksum = "49e7bc1560b95a3c4a25d03de42fe76ca718ab92d1a22a55b9b4cf67b3ae635c"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2382,9 +2382,9 @@ checksum = "f962df74c8c05a667b5ee8bcf162993134c104e96440b663c8daa176dc772d8c"
 
 [[package]]
 name = "uplc"
-version = "1.0.10-alpha"
+version = "1.0.14-alpha"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b62fea0272ac369a88d6c1e04261055e2737ca12ab1f84ab645a0b7bff9eeca7"
+checksum = "d77f2927e30d0254257d07d70351b115b9d4a06654edc2cb0b1b7b4e0e327f15"
 dependencies = [
  "anyhow",
  "cryptoxide",

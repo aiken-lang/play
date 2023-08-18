@@ -17,7 +17,7 @@ use aiken_lang::{
 use indexmap::IndexMap;
 use leptos::{log, SignalSet, SignalUpdate, WriteSignal};
 use uplc::{
-    ast::{NamedDeBruijn, Program},
+    ast::{DeBruijn, NamedDeBruijn, Program},
     machine::cost_model::ExBudget,
 };
 
@@ -70,6 +70,7 @@ impl Project {
     pub fn build(
         &mut self,
         source_code: &str,
+        set_validators: WriteSignal<Vec<(usize, String, String)>>,
         set_warnings: WriteSignal<Vec<(usize, Warning)>>,
         set_errors: WriteSignal<Vec<(usize, CompilerError)>>,
         set_test_results: WriteSignal<Vec<(usize, TestResult)>>,
@@ -104,12 +105,29 @@ impl Project {
                         let (tests, validators, functions, data_types) =
                             self.collect_definitions(name.clone(), typed_ast.definitions());
 
-                        let mut generator = CodeGenerator::new(functions, data_types, module_types);
+                        let mut generator =
+                            CodeGenerator::new(functions, data_types, module_types, false);
 
                         run_tests(tests, &mut generator, set_test_results);
 
-                        for validator in validators {
-                            let _program = generator.generate(validator);
+                        for (index, validator) in validators.into_iter().enumerate() {
+                            let name = format!(
+                                "{}{}",
+                                validator.fun.name,
+                                validator
+                                    .other_fun
+                                    .clone()
+                                    .map(|o| format!(".{}", o.name))
+                                    .unwrap_or_else(|| "".to_string())
+                            );
+
+                            let program = generator.generate(validator);
+
+                            let program: Program<DeBruijn> = program.try_into().unwrap();
+
+                            let program = program.to_hex().unwrap();
+
+                            set_validators.update(|v| v.push((index, name, program)))
                         }
                     }
                     Err(err) => set_errors.set(vec![(0, CompilerError::Type(err))]),
@@ -159,7 +177,6 @@ impl Project {
                         FunctionAccessKey {
                             module_name: name.clone(),
                             function_name: func.name.clone(),
-                            variant_name: String::new(),
                         },
                         func,
                     );
@@ -185,6 +202,7 @@ impl Project {
 
     pub fn setup_stdlib(&mut self) {
         for (module_name, module_src) in stdlib::MODULES {
+            log!("{}", module_name);
             let (mut ast, _extra) = parser::module(module_src, ModuleKind::Lib).unwrap();
 
             ast.name = module_name.to_string();
@@ -212,7 +230,6 @@ impl Project {
                             FunctionAccessKey {
                                 module_name: module_name.to_string(),
                                 function_name: func.name.clone(),
-                                variant_name: "".to_string(),
                             },
                             func,
                         );

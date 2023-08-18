@@ -6,27 +6,27 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-aiken-lang = { version = "1.0.10-alpha" }
-uplc = { version = "1.0.10-alpha" }
+aiken-lang = { version = "1.0.14-alpha" }
+uplc = { version = "1.0.14-alpha" }
 getrandom = { version = "0.2.9", features = ["js"] }
 indexmap = "1.9.2"
 leptos = { version = "0.3.0", features = ["stable"] }
 leptos_icons = { version = "0.0.11", default-features = false, features = [
-    "csr",
-    "RiAlertSystemLine",
-    "RiBook2DocumentFill",
-    "RiCpuDeviceLine",
-    "RiClipboardDocumentLine",
-    "RiCloseSystemLine",
-    "RiDatabase2DeviceLine",
-    "RiDiscordLogosFill",
-    "RiErrorWarningSystemLine",
-    "RiFileEditDocumentLine",
-    "RiGithubLogosFill",
-    "RiPlayMediaFill",
-    "RiRefreshSystemLine",
-    "RiSettings3SystemFill",
-    "RiShareForwardSystemFill",
+  "csr",
+  "RiAlertSystemLine",
+  "RiBook2DocumentFill",
+  "RiCpuDeviceLine",
+  "RiClipboardDocumentLine",
+  "RiCloseSystemLine",
+  "RiDatabase2DeviceLine",
+  "RiDiscordLogosFill",
+  "RiErrorWarningSystemLine",
+  "RiFileEditDocumentLine",
+  "RiGithubLogosFill",
+  "RiPlayMediaFill",
+  "RiRefreshSystemLine",
+  "RiSettings3SystemFill",
+  "RiShareForwardSystemFill",
 ] }
 leptos_router = { version = "0.3.0", features = ["stable", "csr"] }
 monaco = { git = "https://github.com/siku2/rust-monaco.git" }

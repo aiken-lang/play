@@ -14,6 +14,7 @@ pub fn Playground(cx: Scope) -> impl IntoView {
 
     let (editor, set_editor) = create_signal(cx, ModelCell::default());
     let (test_results, set_test_results) = create_signal::<Vec<(usize, TestResult)>>(cx, vec![]);
+    let (validators, set_validators) = create_signal::<Vec<(usize, String, String)>>(cx, vec![]);
     let (warnings, set_warnings) = create_signal::<Vec<(usize, Warning)>>(cx, vec![]);
     let (errors, set_errors) = create_signal::<Vec<(usize, CompilerError)>>(cx, vec![]);
 
@@ -46,14 +47,19 @@ pub fn Playground(cx: Scope) -> impl IntoView {
 
         set_test_results.set(vec![]);
         set_warnings.set(vec![]);
+        set_validators.set(vec![]);
         set_errors.set(vec![]);
 
         let project = project.clone();
 
         async move {
-            project
-                .borrow_mut()
-                .build(&text, set_warnings, set_errors, set_test_results);
+            project.borrow_mut().build(
+                &text,
+                set_validators,
+                set_warnings,
+                set_errors,
+                set_test_results,
+            );
         }
     });
 
@@ -75,7 +81,12 @@ pub fn Playground(cx: Scope) -> impl IntoView {
             <div class="grow hidden md:flex">
                 <Navigation/>
                 <CodeEditor set_editor=set_editor/>
-                <Output test_results=test_results warnings=warnings errors=errors/>
+                <Output
+                    test_results=test_results
+                    warnings=warnings
+                    errors=errors
+                    validators=validators
+                />
             </div>
             <div class="grow text-left md:hidden text-gray-0 pt-4 px-4">
                 "The playground is not optimized for small screens. You're probably using a mobile device, please come back on desktop to try out the playground."
