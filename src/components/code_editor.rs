@@ -50,7 +50,7 @@ const HIGHLIGHTING: &str = r#"
         "if", "else", "when", "is", "fn", "use",
         "let", "pub", "type", "opaque", "const",
         "todo", "expect", "check", "test", "trace",
-        "error", "validator"
+        "fail", "validator", "and", "or"
     ],
     "operators": [
         "->", "|>", "..", "<=", ">=", "==", "!=", "<", ">", "&&", "||",
