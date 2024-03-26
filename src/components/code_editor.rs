@@ -50,11 +50,11 @@ const HIGHLIGHTING: &str = r#"
         "if", "else", "when", "is", "fn", "use",
         "let", "pub", "type", "opaque", "const",
         "todo", "expect", "check", "test", "trace",
-        "fail", "validator", "and", "or"
+        "fail", "validator", "and", "or", "via"
     ],
     "operators": [
         "->", "|>", "..", "<=", ">=", "==", "!=", "<", ">", "&&", "||",
-        "|", "+", "-", "/", "*", "%", "="
+        "|", "+", "-", "/", "*", "%", "=", "<-"
     ],
     "digits": "\\d+(_+\\d+)*",
 	"octaldigits": "[0-7]+(_+[0-7]+)*",
