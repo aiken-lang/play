@@ -1,5 +1,5 @@
 apt update
-apt -y install libz3-4
+apt -y install libz3-4 clang libclang-dev libclang1 liblldb-dev
 
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
