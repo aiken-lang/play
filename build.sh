@@ -1,5 +1,6 @@
-apt update
-apt -y install libz3-4 clang libclang-dev libclang1 liblldb-dev
+apt -y install libz3-4
+
+bash -c "$(wget -O - https://apt.llvm.org/llvm.sh)"
 
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
