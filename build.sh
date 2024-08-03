@@ -2,8 +2,8 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
 source $HOME/.cargo/env
 
-rustup install 1.74.0
-rustup default 1.74.0
+rustup install 1.80.0
+rustup default 1.80.0
 
 rustup target add wasm32-unknown-unknown
 
@@ -24,4 +24,3 @@ tar -xvf stdlib.tar --strip-components 1 -C stdlib
 rm stdlib.tar
 
 trunk build --release
-
