@@ -1,40 +1,76 @@
-pub const MODULES: [(&str, &str); 14] = [
+pub const MODULES: [(&str, &str); 20] = [
+    ("aiken/cbor", include_str!("../stdlib/lib/aiken/cbor.ak")),
     (
-        "aiken/option",
-        include_str!("../stdlib/lib/aiken/option.ak"),
+        "aiken/collection",
+        include_str!("../stdlib/lib/aiken/collection.ak"),
+    ),
+    (
+        "aiken/collection/dict",
+        include_str!("../stdlib/lib/aiken/collection/dict.ak"),
+    ),
+    (
+        "aiken/collection/list",
+        include_str!("../stdlib/lib/aiken/collection/list.ak"),
+    ),
+    (
+        "aiken/collection/pairs",
+        include_str!("../stdlib/lib/aiken/collection/pairs.ak"),
+    ),
+    (
+        "aiken/crypto",
+        include_str!("../stdlib/lib/aiken/crypto.ak"),
     ),
     (
         "aiken/interval",
         include_str!("../stdlib/lib/aiken/interval.ak"),
     ),
-    ("aiken/time", include_str!("../stdlib/lib/aiken/time.ak")),
     ("aiken/math", include_str!("../stdlib/lib/aiken/math.ak")),
-    ("aiken/hash", include_str!("../stdlib/lib/aiken/hash.ak")),
-    (
-        "aiken/bytearray",
-        include_str!("../stdlib/lib/aiken/bytearray.ak"),
-    ),
-    ("aiken/dict", include_str!("../stdlib/lib/aiken/dict.ak")),
-    ("aiken/int", include_str!("../stdlib/lib/aiken/int.ak")),
-    ("aiken/list", include_str!("../stdlib/lib/aiken/list.ak")),
     (
         "aiken/math/rational",
         include_str!("../stdlib/lib/aiken/math/rational.ak"),
     ),
     (
-        "aiken/transaction/credential",
-        include_str!("../stdlib/lib/aiken/transaction/credential.ak"),
+        "aiken/option",
+        include_str!("../stdlib/lib/aiken/option.ak"),
     ),
     (
-        "aiken/transaction/certificate",
-        include_str!("../stdlib/lib/aiken/transaction/certificate.ak"),
+        "aiken/primitive/bytearray",
+        include_str!("../stdlib/lib/aiken/primitive/bytearray.ak"),
     ),
     (
-        "aiken/transaction/value",
-        include_str!("../stdlib/lib/aiken/transaction/value.ak"),
+        "aiken/primitive/int",
+        include_str!("../stdlib/lib/aiken/primitive/int.ak"),
     ),
     (
-        "aiken/transaction",
-        include_str!("../stdlib/lib/aiken/transaction.ak"),
+        "aiken/primitive/string",
+        include_str!("../stdlib/lib/aiken/primitive/string.ak"),
+    ),
+    (
+        "cardano/address",
+        include_str!("../stdlib/lib/cardano/address.ak"),
+    ),
+    (
+        "cardano/assets",
+        include_str!("../stdlib/lib/cardano/assets.ak"),
+    ),
+    (
+        "cardano/certificate",
+        include_str!("../stdlib/lib/cardano/certificate.ak"),
+    ),
+    (
+        "cardano/governance",
+        include_str!("../stdlib/lib/cardano/governance.ak"),
+    ),
+    (
+        "cardano/governance/protocol_parameters",
+        include_str!("../stdlib/lib/cardano/governance/protocol_parameters.ak"),
+    ),
+    (
+        "cardano/script_context",
+        include_str!("../stdlib/lib/cardano/script_context.ak"),
+    ),
+    (
+        "cardano/transaction",
+        include_str!("../stdlib/lib/cardano/transaction.ak"),
     ),
 ];
