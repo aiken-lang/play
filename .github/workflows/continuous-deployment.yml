@@ -1,0 +1,16 @@
+name: Continuous Deployment
+
+on:
+  push:
+    branches: ["main"]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - shell: bash
+        run: ./build.sh
