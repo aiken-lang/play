@@ -17,15 +17,38 @@ use monaco::{
 };
 use wasm_bindgen::JsValue;
 
-const INITIAL_CONTENT: &str = r#"use aiken/list
+const INITIAL_CONTENT: &str = r#"use aiken/collection/list
+use aiken/fuzz
+use cardano/assets
+use cardano/transaction.{Transaction}
+
+validator main() {
+  mint(redeemer: List<Int>, policy_id: ByteArray, self: Transaction) {
+    trace @"minting": policy_id, @"with", redeemer
+
+    let quantities = self.mint
+        |> assets.flatten
+        |> list.map(fn(t) { t.3rd })
+
+    quicksort(redeemer) == quantities
+  }
+
+  else(_) {
+    fail
+  }
+}
 
 fn quicksort(xs: List<Int>) -> List<Int> {
   when xs is {
     [] ->
       []
     [p, ..tail] -> {
-      let before = tail |> list.filter(fn(x) { x < p }) |> quicksort
-      let after = tail |> list.filter(fn(x) { x >= p }) |> quicksort
+      let before = tail
+        |> list.filter(fn(x) { x < p })
+        |> quicksort
+      let after = tail
+        |> list.filter(fn(x) { x >= p })
+        |> quicksort
       list.concat(before, [p, ..after])
     }
   }
@@ -42,19 +65,22 @@ test quicksort_1() {
 test quicksort_2() {
   quicksort([1, 2, 3, 4]) == [1, 2, 3, 4]
 }
-"#;
+
+test quicksort_prop(xs via fuzz.list(fuzz.int())) {
+  quicksort(xs) == quicksort(quicksort(xs))
+}"#;
 
 const HIGHLIGHTING: &str = r#"
 {
     "keywords": [
         "if", "else", "when", "is", "fn", "use",
         "let", "pub", "type", "opaque", "const",
-        "todo", "expect", "check", "test", "trace",
-        "fail", "validator", "and", "or", "via"
+        "todo", "expect", "test", "trace", "fail",
+        "once", "validator", "and", "or", "via"
     ],
     "operators": [
         "->", "|>", "..", "<=", ">=", "==", "!=", "<", ">", "&&", "||",
-        "|", "+", "-", "/", "*", "%", "=", "<-"
+        "|", "+", "-", "/", "*", "%", "=", "<-", "?"
     ],
     "digits": "\\d+(_+\\d+)*",
 	"octaldigits": "[0-7]+(_+[0-7]+)*",
@@ -74,7 +100,9 @@ const HIGHLIGHTING: &str = r#"
             ["0[xX](@hexdigits)", "number.hex"],
 			["0[oO]?(@octaldigits)", "number.octal"],
 			["0[bB](@binarydigits)", "number.binary"],
-			["(@digits)", "number"]
+			["(@digits)", "number"],
+            ["\"([^\"\\\\]|\\\\.)*$", "string.invalid"],
+            ["\"([^\"\\\\]|\\\\.)*\"", "string"]
         ]
     }
 }

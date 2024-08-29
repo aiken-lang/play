@@ -1,7 +1,9 @@
-use std::error::Error;
-
-use aiken_lang::{parser::error::ParseError, tipo};
+use aiken_lang::{
+    parser::error::ParseError,
+    tipo::{self},
+};
 use miette::Diagnostic;
+use std::error::Error;
 
 #[derive(Clone)]
 pub enum CompilerError {

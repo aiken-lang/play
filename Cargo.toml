@@ -1,23 +1,25 @@
 [package]
 name = "play"
-version = "1.0.29-alpha"
+version = "1.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-aiken-lang = { git = "https://github.com/aiken-lang/aiken.git", branch = "main" }
-uplc = { git = "https://github.com/aiken-lang/aiken.git", branch = "main" }
+aiken-lang = { git = "https://github.com/aiken-lang/aiken" }
+uplc = { git = "https://github.com/aiken-lang/aiken" }
 getrandom = { version = "0.2.9", features = ["js"] }
 indexmap = "1.9.2"
 leptos = { version = "0.3.0", features = ["stable"] }
 leptos_icons = { version = "0.0.11", default-features = false, features = [
     "csr",
+    "BiLinkExternalRegular",
+    "LuDices",
     "RiAlertSystemLine",
     "RiBook2DocumentFill",
-    "RiCpuDeviceLine",
     "RiClipboardDocumentLine",
     "RiCloseSystemLine",
+    "RiCpuDeviceLine",
     "RiDatabase2DeviceLine",
     "RiDiscordLogosFill",
     "RiErrorWarningSystemLine",
@@ -29,10 +31,12 @@ leptos_icons = { version = "0.0.11", default-features = false, features = [
     "RiShareForwardSystemFill",
 ] }
 leptos_router = { version = "0.3.0", features = ["stable", "csr"] }
+supports-color = "1.3.1"
+fastrand = "2.1.1"
 monaco = { git = "https://github.com/siku2/rust-monaco.git" }
 wasm-bindgen = { version = "0.2.84" }
 web-sys = { version = "0.3.61", features = ["Navigator", "Clipboard"] }
-miette = "5.8.0"
+miette = "7.2.0"
 js-sys = "0.3.61"
 base64 = "0.21.0"
 brotli = "3.3.4"

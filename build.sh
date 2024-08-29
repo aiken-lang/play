@@ -1,10 +1,6 @@
 brew install llvm zlib bzip2
 
-echo $(which clang)
-
 export PATH=/opt/homebrew/opt/llvm/bin:$PATH
-
-echo $(which clang)
 
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
@@ -30,13 +26,13 @@ tar -xvf stdlib.tar --strip-components 1 -C stdlib
 rm stdlib.tar
 
 # Unpack fuzz
-# rm -rf fuzz && mkdir -p fuzz
-# curl -L \
-#   -H "Accept: application/vnd.github+json" \
-#   -H "X-GitHub-Api-Version: 2022-11-28" \
-#   https://api.github.com/repos/aiken-lang/fuzz/tarball/main \
-#   -o fuzz.tar
-# tar -xvf fuzz.tar --strip-components 1 -C fuzz
-# rm fuzz.tar
+rm -rf fuzz && mkdir -p fuzz
+curl -L \
+  -H "Accept: application/vnd.github+json" \
+  -H "X-GitHub-Api-Version: 2022-11-28" \
+  https://api.github.com/repos/aiken-lang/fuzz/tarball/main \
+  -o fuzz.tar
+tar -xvf fuzz.tar --strip-components 1 -C fuzz
+rm fuzz.tar
 
 trunk build --release

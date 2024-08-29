@@ -1,11 +1,12 @@
-use std::error::Error;
-
+use crate::{
+    compiler_error::CompilerError,
+    project::{TestResult, TestResultMeta},
+};
 use aiken_lang::tipo::error::Warning;
 use leptos::*;
 use leptos_icons::*;
 use miette::Diagnostic;
-
-use crate::{compiler_error::CompilerError, project::TestResult};
+use std::error::Error;
 
 #[component]
 pub fn Output(
@@ -15,6 +16,29 @@ pub fn Output(
     errors: ReadSignal<Vec<(usize, CompilerError)>>,
     validators: ReadSignal<Vec<(usize, String, String)>>,
 ) -> impl IntoView {
+    let test_result_meta_view = |meta: TestResultMeta, scope: Scope| match meta {
+        TestResultMeta::ExBudget(budget) => view! { scope,
+            <div class="flex items-center justify-start gap-x-9 text-gray-70 mr-9 text-sm font-normal">
+                <div class="flex items-center gap-x-1">
+                    <Icon icon=RiIcon::RiCpuDeviceLine class="w-3.5 h-3.5"/>
+                    {budget.cpu}
+                </div>
+                <div class="flex items-center gap-x-1">
+                    <Icon icon=RiIcon::RiDatabase2DeviceLine class="w-3.5 h-3.5"/>
+                    {budget.mem}
+                </div>
+            </div>
+        },
+        TestResultMeta::Iterations(iterations) => view! { scope,
+            <div class="flex items-center justify-start gap-x-9 text-gray-70 mr-9 text-sm font-normal">
+                <div class="flex items-center gap-x-1">
+                    <Icon icon=LuIcon::LuDices class="w-3.5 h-3.5"/>
+                    {iterations}
+                </div>
+            </div>
+        },
+    };
+
     view! { cx,
         <div class="p-4 overflow-y-scroll flex grow flex-col gap-y-11">
             <div>
@@ -45,7 +69,7 @@ pub fn Output(
                                             <button
                                                 class="flex items-center px-2 py-y"
                                                 on:click=move |_| {
-                                                    let _ = window().navigator().clipboard().unwrap().write_text(&program);
+                                                    let _ = window().navigator().clipboard().write_text(&program);
                                                 }
                                             >
                                                 <Icon icon=RiIcon::RiClipboardDocumentLine class="w-2 h-full"/>
@@ -86,17 +110,24 @@ pub fn Output(
                                             </span>
                                             <span class="text-white text-sm font-normal">{test_result.name}</span>
                                         </div>
-                                        <div class="flex items-center justify-start gap-x-9 text-gray-70 mr-9 text-sm font-normal">
-                                            <div class="flex items-center gap-x-1">
-                                                <Icon icon=RiIcon::RiCpuDeviceLine class="w-3.5 h-3.5"/>
-                                                {test_result.spent_budget.cpu}
-                                            </div>
-                                            <div class="flex items-center gap-x-1">
-                                                <Icon icon=RiIcon::RiDatabase2DeviceLine class="w-3.5 h-3.5"/>
-                                                {test_result.spent_budget.mem}
-                                            </div>
-                                        </div>
+                                        { test_result_meta_view(test_result.meta, cx) }
                                     </div>
+                                    { move || {
+                                        if !test_result.logs.is_empty() {
+                                            view! { cx,
+                                                <div class="flex flex-col items-left bg-gray-80 pr-2 pt-2 pb-2 pl-3 space-y-2">
+                                                    {test_result.logs.iter().map(|log| {
+                                                        view! { cx, <pre
+                                                            class="test-trace text-xs text-gray-70 font-mono"
+                                                            class:success=test_result.success>{log}</pre>
+                                                        }
+                                                    }).collect_view(cx)}
+                                                </div>
+                                            }
+                                        } else {
+                                            view! { cx, <div></div> }
+                                        }
+                                    }}
                                 </li>
                             }
                         }
@@ -184,6 +215,31 @@ pub fn Output(
                         }
                     />
                 </ul>
+            </div>
+            <div class="mt-auto">
+                <div class="flex flex-col items-left mb-5 text-gray-40 gap-x-2 text-lg font-normal">
+                    "Available modules"
+                    <ul class="text-sm text-violet-200">
+                        <li>
+                            <a class="flex items-center hover:underline hover:text-violet-300" target="_blank" href="https://aiken-lang.github.io/prelude">
+                                "aiken-lang/prelude"
+                                <Icon icon=BiIcon::BiLinkExternalRegular class="w-3 h-3 ml-1" />
+                            </a>
+                        </li>
+                        <li>
+                            <a class="flex items-center hover:underline hover:text-violet-300" target="_blank" href="https://aiken-lang.github.io/stdlib/v2.0.0">
+                                "aiken-lang/stdlib (v2.0.0)"
+                                <Icon icon=BiIcon::BiLinkExternalRegular class="w-3 h-3 ml-1" />
+                            </a>
+                        </li>
+                        <li>
+                            <a class="flex items-center hover:underline hover:text-violet-300" target="_blank" href="https://aiken-lang.github.io/fuzz">
+                                "aiken-lang/fuzz (v2.0.0)"
+                                <Icon icon=BiIcon::BiLinkExternalRegular class="w-3 h-3 ml-1" />
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     }

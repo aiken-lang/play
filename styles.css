@@ -67,3 +67,13 @@
   background: linear-gradient(180deg, rgba(247, 48, 144, 1) 0%, rgba(247, 48, 144, 0) 100%);
 }
 
+pre.test-trace { --color-trace: rgb(247, 48, 144); }
+pre.test-trace.success { --color-trace: rgb(131, 190, 246); }
+pre.test-trace::before {
+  content: 'Trace';
+  font-variant: small-caps;
+  color: var(--color-trace);
+  font-size: 0.9em;
+  padding-right: 0.65rem;
+  font-weight: bold;
+}

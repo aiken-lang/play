@@ -2,9 +2,10 @@ use leptos::*;
 
 mod compiler_error;
 mod components;
+mod macros;
 mod playground;
 mod project;
-mod stdlib;
+pub(crate) mod vendor;
 
 use playground::Playground;
 

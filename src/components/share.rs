@@ -21,11 +21,7 @@ where
     let share_url = move || get_share_url(editor);
 
     let on_copy = move |_| {
-        let _ = window()
-            .navigator()
-            .clipboard()
-            .unwrap()
-            .write_text(&share_url());
+        let _ = window().navigator().clipboard().write_text(&share_url());
         set_copy.set(true);
     };
 

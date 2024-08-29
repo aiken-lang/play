@@ -1,3 +1,4 @@
+use aiken_lang::version::compiler_version;
 use leptos::*;
 use leptos_icons::*;
 
@@ -18,13 +19,14 @@ where
 {
     view! { cx,
         <header class="flex justify-between items-center p-3 border-b border-solid border-gray-40">
-            <div class="flex items-center gap-x-3">
+            <div class="flex items-center gap-x-3 relative">
                 <img
                     class="w-8 h-8"
                     type="image/png"
                     src="https://raw.githubusercontent.com/aiken-lang/branding/main/assets/icon.png"
                 />
                 <span class="text-white text-lg font-semibold">"AIKEN PLAYGROUND"</span>
+                <span class="text-gray-40 text-xs font-mono absolute left-[42px] top-[2em]">{compiler_version(true)}</span>
             </div>
             <div class="gap-x-4 hidden md:flex">
                 <button
