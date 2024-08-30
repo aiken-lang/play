@@ -128,6 +128,26 @@ pub fn Output(
                                             view! { cx, <div></div> }
                                         }
                                     }}
+                                    { move || {
+                                        if !test_result.labels.is_empty() {
+                                            view! { cx,
+                                                <div class="flex flex-col items-left bg-gray-80 pr-2 pb-2 pl-3 space-y-2">
+                                                    <div><span class="text-blue-40 font-semibold text-xs">"COVERAGE"</span></div>
+                                                    {test_result.labels.iter().map(|(p, l)| {
+                                                        view! { cx, <div
+                                                            class="text-xs text-gray-70 font-mono flex flex-row gap-x-2"
+                                                            class:success=test_result.success>
+                                                              <span class="percentage font-semibold">{p}"%"</span>
+                                                              <span class="label">{l}</span>
+                                                            </div>
+                                                        }
+                                                    }).collect_view(cx)}
+                                                </div>
+                                            }
+                                        } else {
+                                            view! { cx, <div></div> }
+                                        }
+                                    }}
                                 </li>
                             }
                         }

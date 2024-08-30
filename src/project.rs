@@ -8,6 +8,7 @@ use aiken_lang::{
         TypedDataType, TypedFunction, TypedModule, TypedTest, TypedValidator, UntypedModule,
     },
     builtins,
+    format::Formatter,
     gen_uplc::CodeGenerator,
     line_numbers::LineNumbers,
     parser,
@@ -43,6 +44,7 @@ pub struct TestResult {
     pub name: String,
     pub success: bool,
     pub logs: Vec<String>,
+    pub labels: Vec<(String, String)>,
     pub meta: TestResultMeta,
 }
 
@@ -153,12 +155,9 @@ impl Project {
                             let program = generator.generate(validator, NAME);
                             let program: Program<DeBruijn> = program.try_into().unwrap();
                             let program = program.to_hex().unwrap();
-
-                            for handler in validator.handlers.iter() {
-                                let name =
-                                    TypedValidator::handler_name(&validator.name, &handler.name);
-                                set_validators.update(|v| v.push((index, name, program.clone())))
-                            }
+                            set_validators.update(|v| {
+                                v.push((index, validator.name.clone(), program.clone()))
+                            });
                         }
                     }
 
@@ -280,16 +279,50 @@ impl Project {
                     name: unit_test.test.name,
                     success,
                     logs,
+                    labels: Vec::new(),
                     meta: TestResultMeta::ExBudget(unit_test.spent_budget),
                 }
             }
             test_framework::TestResult::PropertyTestResult(prop_test) => {
-                let logs = Vec::new();
+                let prop_test = prop_test.reify(&data_types);
+
+                let mut logs = Vec::new();
+                if let Ok(Some(counterexample)) = prop_test.counterexample {
+                    logs.push(format!(
+                        "counterexample\n{}",
+                        Formatter::new()
+                            .expr(&counterexample, false)
+                            .to_pretty_string(80)
+                    ));
+                }
+
+                let mut labels = Vec::new();
+                if success {
+                    let mut total = 0;
+                    let mut pad = 0;
+                    for (k, v) in prop_test.labels.iter() {
+                        total += v;
+                        if k.len() > pad {
+                            pad = k.len();
+                        }
+                    }
+
+                    let mut xs = prop_test.labels.iter().collect::<Vec<_>>();
+                    xs.sort_by(|a, b| b.1.cmp(a.1));
+
+                    for (k, v) in xs {
+                        labels.push((
+                            format!("{}", 100.0 * (*v as f64) / (total as f64)),
+                            k.clone(),
+                        ));
+                    }
+                }
 
                 TestResult {
                     name: prop_test.test.name,
                     success,
                     meta: TestResultMeta::Iterations(prop_test.iterations),
+                    labels,
                     logs,
                 }
             }

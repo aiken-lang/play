@@ -22,15 +22,16 @@ use aiken/fuzz
 use cardano/assets
 use cardano/transaction.{Transaction}
 
-validator main() {
+validator main {
   mint(redeemer: List<Int>, policy_id: ByteArray, self: Transaction) {
     trace @"minting": policy_id, @"with", redeemer
 
-    let quantities = self.mint
+    let quantities =
+      self.mint
         |> assets.flatten
         |> list.map(fn(t) { t.3rd })
 
-    quicksort(redeemer) == quantities
+    (quicksort(redeemer) == quantities)?
   }
 
   else(_) {
@@ -43,12 +44,14 @@ fn quicksort(xs: List<Int>) -> List<Int> {
     [] ->
       []
     [p, ..tail] -> {
-      let before = tail
-        |> list.filter(fn(x) { x < p })
-        |> quicksort
-      let after = tail
-        |> list.filter(fn(x) { x >= p })
-        |> quicksort
+      let before =
+        tail
+          |> list.filter(fn(x) { x < p })
+          |> quicksort
+      let after =
+        tail
+          |> list.filter(fn(x) { x >= p })
+          |> quicksort
       list.concat(before, [p, ..after])
     }
   }
@@ -67,6 +70,7 @@ test quicksort_2() {
 }
 
 test quicksort_prop(xs via fuzz.list(fuzz.int())) {
+  fuzz.label_when(list.is_empty(xs), @"empty", @"non-empty")
   quicksort(xs) == quicksort(quicksort(xs))
 }"#;
 
