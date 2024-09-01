@@ -8,6 +8,7 @@ use aiken_lang::{
         TypedDataType, TypedFunction, TypedModule, TypedTest, TypedValidator, UntypedModule,
     },
     builtins,
+    expr::TypedExpr,
     format::Formatter,
     gen_uplc::CodeGenerator,
     line_numbers::LineNumbers,
@@ -59,6 +60,7 @@ pub struct Project {
     id_gen: IdGenerator,
     module_types: HashMap<String, TypeInfo>,
     functions: IndexMap<FunctionAccessKey, TypedFunction>,
+    constants: IndexMap<FunctionAccessKey, TypedExpr>,
     data_types: IndexMap<DataTypeKey, TypedDataType>,
     module_sources: HashMap<String, (String, LineNumbers)>,
     dependencies: BTreeSet<String>,
@@ -74,11 +76,13 @@ impl Project {
 
         let functions = builtins::prelude_functions(&id_gen, &module_types);
         let data_types = builtins::prelude_data_types(&id_gen);
+        let constants = IndexMap::new();
 
         RefCell::new(Project {
             id_gen,
             module_types,
             functions,
+            constants,
             data_types,
             module_sources: HashMap::new(),
             dependencies: BTreeSet::new(),
@@ -142,7 +146,11 @@ impl Project {
                             .insert(NAME.to_string(), ast.type_info.clone());
 
                         // Register function definitions & data-types for easier access later.
-                        ast.register_definitions(&mut self.functions, &mut self.data_types);
+                        ast.register_definitions(
+                            &mut self.functions,
+                            &mut self.constants,
+                            &mut self.data_types,
+                        );
 
                         // Run all tests
                         self.run_tests(&ast, set_test_results);
@@ -209,6 +217,7 @@ impl Project {
         CodeGenerator::new(
             PLUTUS_VERSION,
             utils::indexmap::as_ref_values(&self.functions),
+            utils::indexmap::as_ref_values(&self.constants),
             utils::indexmap::as_ref_values(&self.data_types),
             utils::indexmap::as_str_ref_values(&self.module_types),
             utils::indexmap::as_str_ref_values(&self.module_sources),
@@ -355,7 +364,11 @@ impl Project {
                 })
                 .unwrap();
 
-            ast.register_definitions(&mut self.functions, &mut self.data_types);
+            ast.register_definitions(
+                &mut self.functions,
+                &mut self.constants,
+                &mut self.data_types,
+            );
 
             self.module_sources.insert(
                 module_name.to_string(),
