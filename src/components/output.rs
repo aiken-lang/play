@@ -247,7 +247,7 @@ pub fn Output(
                             </a>
                         </li>
                         <li>
-                            <a class="flex items-center hover:underline hover:text-violet-300" target="_blank" href="https://aiken-lang.github.io/stdlib/v2.0.0">
+                            <a class="flex items-center hover:underline hover:text-violet-300" target="_blank" href="https://aiken-lang.github.io/stdlib">
                                 "aiken-lang/stdlib (v2.0.0)"
                                 <Icon icon=BiIcon::BiLinkExternalRegular class="w-3 h-3 ml-1" />
                             </a>
