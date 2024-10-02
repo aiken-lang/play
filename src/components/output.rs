@@ -1,6 +1,7 @@
 use crate::{
     compiler_error::CompilerError,
     project::{TestResult, TestResultMeta},
+    vendor::{fuzz, stdlib},
 };
 use aiken_lang::tipo::error::Warning;
 use leptos::*;
@@ -248,13 +249,13 @@ pub fn Output(
                         </li>
                         <li>
                             <a class="flex items-center hover:underline hover:text-violet-300" target="_blank" href="https://aiken-lang.github.io/stdlib">
-                                "aiken-lang/stdlib (v2.0.0)"
+                                "aiken-lang/stdlib ("{stdlib::VERSION}")"
                                 <Icon icon=BiIcon::BiLinkExternalRegular class="w-3 h-3 ml-1" />
                             </a>
                         </li>
                         <li>
                             <a class="flex items-center hover:underline hover:text-violet-300" target="_blank" href="https://aiken-lang.github.io/fuzz">
-                                "aiken-lang/fuzz (v2.0.0)"
+                                "aiken-lang/fuzz ("{fuzz::VERSION}")"
                                 <Icon icon=BiIcon::BiLinkExternalRegular class="w-3 h-3 ml-1" />
                             </a>
                         </li>

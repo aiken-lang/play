@@ -1,12 +1,13 @@
 use crate::hashmap;
 use std::collections::HashMap;
 
+pub const VERSION: &str = "v2.1.0";
+
 /// The type-checking sequence in which we must compile the modules.
 /// In a 'real' project, this is done using a dependency graph which
 /// code lies under aiken-project -- not importable here.
-pub const MODULES_SEQUENCE: [&str; 20] = [
+pub const MODULES_SEQUENCE: [&str; 27] = [
     "aiken/crypto",
-    "cardano/address",
     "aiken/math",
     "aiken/option",
     "aiken/primitive/bytearray",
@@ -15,8 +16,11 @@ pub const MODULES_SEQUENCE: [&str; 20] = [
     "aiken/collection/dict",
     "aiken/collection/list",
     "aiken/math/rational",
+    "cardano/address",
+    "cardano/address/credential",
     "cardano/assets",
     "cardano/governance/protocol_parameters",
+    "cardano/governance/voter",
     "aiken/cbor",
     "cardano/certificate",
     "aiken/primitive/string",
@@ -24,7 +28,12 @@ pub const MODULES_SEQUENCE: [&str; 20] = [
     "aiken/collection/pairs",
     "aiken/interval",
     "cardano/transaction",
+    "cardano/transaction/output_reference",
     "cardano/script_context",
+    "cardano/transaction/script_purpose",
+    "cardano/crypto/bls12_381/scalar",
+    "cardano/crypto/bls12_381/g1",
+    "cardano/crypto/bls12_381/g2",
 ];
 
 pub fn modules() -> HashMap<&'static str, &'static str> {
@@ -35,6 +44,9 @@ pub fn modules() -> HashMap<&'static str, &'static str> {
         "aiken/collection/list" => include_str!("../../stdlib/lib/aiken/collection/list.ak"),
         "aiken/collection/pairs" => include_str!("../../stdlib/lib/aiken/collection/pairs.ak"),
         "aiken/crypto" => include_str!("../../stdlib/lib/aiken/crypto.ak"),
+        "aiken/crypto/bls12_381/g1" => include_str!("../../stdlib/lib/aiken/crypto/bls12_381/g1.ak"),
+        "aiken/crypto/bls12_381/g2" => include_str!("../../stdlib/lib/aiken/crypto/bls12_381/g2.ak"),
+        "aiken/crypto/bls12_381/scalar" => include_str!("../../stdlib/lib/aiken/crypto/bls12_381/scalar.ak"),
         "aiken/interval" => include_str!("../../stdlib/lib/aiken/interval.ak"),
         "aiken/math" => include_str!("../../stdlib/lib/aiken/math.ak"),
         "aiken/math/rational" => include_str!("../../stdlib/lib/aiken/math/rational.ak"),
@@ -43,11 +55,15 @@ pub fn modules() -> HashMap<&'static str, &'static str> {
         "aiken/primitive/int" => include_str!("../../stdlib/lib/aiken/primitive/int.ak"),
         "aiken/primitive/string" => include_str!("../../stdlib/lib/aiken/primitive/string.ak"),
         "cardano/address" => include_str!("../../stdlib/lib/cardano/address.ak"),
+        "cardano/address/credential" => include_str!("../../stdlib/lib/cardano/address.ak"),
         "cardano/assets" => include_str!("../../stdlib/lib/cardano/assets.ak"),
         "cardano/certificate" => include_str!("../../stdlib/lib/cardano/certificate.ak"),
         "cardano/governance" => include_str!("../../stdlib/lib/cardano/governance.ak"),
         "cardano/governance/protocol_parameters" => include_str!("../../stdlib/lib/cardano/governance/protocol_parameters.ak"),
+        "cardano/governance/voter" => include_str!("../../stdlib/lib/cardano/governance/voter.ak"),
         "cardano/script_context" => include_str!("../../stdlib/lib/cardano/script_context.ak"),
         "cardano/transaction" => include_str!("../../stdlib/lib/cardano/transaction.ak"),
+        "cardano/transaction/output_reference" => include_str!("../../stdlib/lib/cardano/transaction/output_reference.ak"),
+        "cardano/transaction/script_purpose" => include_str!("../../stdlib/lib/cardano/transaction/script_purpose.ak"),
     }
 }

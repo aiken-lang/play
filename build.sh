@@ -20,7 +20,7 @@ rm -rf stdlib && mkdir -p stdlib
 curl -L \
   -H "Accept: application/vnd.github+json" \
   -H "X-GitHub-Api-Version: 2022-11-28" \
-  https://api.github.com/repos/aiken-lang/stdlib/tarball/main \
+  https://api.github.com/repos/aiken-lang/stdlib/tarball/v2.1.0 \
   -o stdlib.tar
 tar -xvf stdlib.tar --strip-components 1 -C stdlib
 rm stdlib.tar
@@ -30,7 +30,7 @@ rm -rf fuzz && mkdir -p fuzz
 curl -L \
   -H "Accept: application/vnd.github+json" \
   -H "X-GitHub-Api-Version: 2022-11-28" \
-  https://api.github.com/repos/aiken-lang/fuzz/tarball/main \
+  https://api.github.com/repos/aiken-lang/fuzz/tarball/v2.1.0 \
   -o fuzz.tar
 tar -xvf fuzz.tar --strip-components 1 -C fuzz
 rm fuzz.tar

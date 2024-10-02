@@ -1891,7 +1891,7 @@ checksum = "d231b230927b5e4ad203db57bbcbee2802f6bce620b1e4a9024a07d94e2907ec"
 
 [[package]]
 name = "play"
-version = "1.1.0"
+version = "1.1.4"
 dependencies = [
  "aiken-lang",
  "base64 0.21.7",
