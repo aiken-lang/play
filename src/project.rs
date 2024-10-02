@@ -340,9 +340,9 @@ impl Project {
 
     fn setup_dependency(&mut self, context: &str, modules: HashMap<&str, &str>, sequence: &[&str]) {
         for module_name in sequence {
-            let module_src = modules
-                .get(module_name)
-                .expect("couldn't find sources for '{module_name}' when compiling {context}");
+            let module_src = modules.get(module_name).unwrap_or_else(|| {
+                panic!("couldn't find sources for '{module_name}' when compiling {context}")
+            });
             let (mut ast, _extra) = parser::module(module_src, ModuleKind::Lib).unwrap();
 
             ast.name = module_name.to_string();
