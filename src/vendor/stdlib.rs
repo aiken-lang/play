@@ -1,7 +1,7 @@
 use crate::hashmap;
 use std::collections::HashMap;
 
-pub const VERSION: &str = "v2.1.0";
+pub const VERSION: &str = "v2.2.0";
 
 /// The type-checking sequence in which we must compile the modules.
 /// In a 'real' project, this is done using a dependency graph which

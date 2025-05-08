@@ -15,7 +15,7 @@ use aiken_lang::{
     parser,
     parser::{error::ParseError, extra::ModuleExtra},
     plutus_version::PlutusVersion,
-    test_framework::{self, Test},
+    test_framework::{self, AssertionStyleOptions, RunnableKind, Test},
     tipo::{error::Warning, Type, TypeInfo},
     utils, IdGenerator,
 };
@@ -27,7 +27,6 @@ use std::{
     path::PathBuf,
     rc::Rc,
 };
-use supports_color::Stream::Stderr;
 use uplc::{
     ast::{DeBruijn, Program},
     machine::cost_model::ExBudget,
@@ -194,6 +193,7 @@ impl Project {
                 | Definition::Fn { .. }
                 | Definition::TypeAlias { .. }
                 | Definition::DataType { .. }
+                | Definition::Benchmark { .. }
                 | Definition::Use { .. } => None,
             })
             .collect::<Vec<_>>()
@@ -208,6 +208,7 @@ impl Project {
                 | Definition::Fn { .. }
                 | Definition::TypeAlias { .. }
                 | Definition::DataType { .. }
+                | Definition::Benchmark { .. }
                 | Definition::Use { .. } => None,
             })
             .collect::<Vec<_>>()
@@ -238,17 +239,13 @@ impl Project {
                 test.to_owned(),
                 NAME.to_string(),
                 PathBuf::new(),
+                RunnableKind::Test,
             );
 
             set_test_results.update(|t| {
                 t.push((
                     index,
-                    self.test_result(match test {
-                        Test::UnitTest(unit_test) => unit_test.run(&PLUTUS_VERSION),
-                        Test::PropertyTest(property_test) => {
-                            property_test.run(rng.u32(..), PROPERTY_MAX_SUCCESS, &PLUTUS_VERSION)
-                        }
-                    }),
+                    self.test_result(test.run(rng.u32(..), PROPERTY_MAX_SUCCESS, &PLUTUS_VERSION)),
                 ))
             });
         }
@@ -261,8 +258,12 @@ impl Project {
         let data_types = utils::indexmap::as_ref_values(&self.data_types);
 
         let success = result.is_success();
+        let execution_logs = result.logs().to_vec();
 
         match result {
+            test_framework::TestResult::BenchmarkResult(..) => {
+                unreachable!()
+            }
             test_framework::TestResult::UnitTestResult(unit_test) => {
                 let unit_test = unit_test.reify(&data_types);
 
@@ -278,11 +279,11 @@ impl Project {
                     if let Some(assertion) = unit_test.assertion {
                         logs.push(format!(
                             "assertion failure\n{}",
-                            assertion.to_string(Stderr, expect_failure)
+                            assertion.to_string(expect_failure, &AssertionStyleOptions::new(None))
                         ));
                     }
                 }
-                logs.extend(unit_test.traces);
+                logs.extend(execution_logs);
 
                 TestResult {
                     name: unit_test.test.name,

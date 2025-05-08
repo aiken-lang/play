@@ -1,7 +1,7 @@
 use crate::hashmap;
 use std::collections::HashMap;
 
-pub const VERSION: &str = "v2.1.0";
+pub const VERSION: &str = "v2.1.1";
 
 pub const MODULES_SEQUENCE: [&str; 1] = ["aiken/fuzz"];
 
