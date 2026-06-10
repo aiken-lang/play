@@ -245,7 +245,12 @@ impl Project {
             set_test_results.update(|t| {
                 t.push((
                     index,
-                    self.test_result(test.run(rng.u32(..), PROPERTY_MAX_SUCCESS, &PLUTUS_VERSION)),
+                    self.test_result(test.run(
+                        rng.u32(..),
+                        PROPERTY_MAX_SUCCESS,
+                        &PLUTUS_VERSION,
+                        Tracing::verbose(),
+                    )),
                 ))
             });
         }

@@ -1,13 +1,13 @@
 [package]
 name = "play"
-version = "1.1.17"
+version = "1.1.22"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-aiken-lang = { git = "https://github.com/aiken-lang/aiken" }
-uplc = { git = "https://github.com/aiken-lang/aiken" }
+aiken-lang = "1.1.22"
+uplc = "1.1.22"
 getrandom = { version = "0.2.9", features = ["js"] }
 indexmap = "1.9.2"
 leptos = { version = "0.3.0", features = ["stable"] }

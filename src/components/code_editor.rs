@@ -26,10 +26,9 @@ validator main {
   mint(redeemer: List<Int>, policy_id: ByteArray, self: Transaction) {
     trace @"minting": policy_id, @"with", redeemer
 
-    let quantities =
-      self.mint
-        |> assets.flatten
-        |> list.map(fn(t) { t.3rd })
+    let quantities = self.mint
+      |> assets.flatten
+      |> list.map(fn(t) { t.3rd })
 
     (quicksort(redeemer) == quantities)?
   }
@@ -41,17 +40,14 @@ validator main {
 
 fn quicksort(xs: List<Int>) -> List<Int> {
   when xs is {
-    [] ->
-      []
+    [] -> []
     [p, ..tail] -> {
-      let before =
-        tail
-          |> list.filter(fn(x) { x < p })
-          |> quicksort
-      let after =
-        tail
-          |> list.filter(fn(x) { x >= p })
-          |> quicksort
+      let before = tail
+        |> list.filter(fn(x) { x < p })
+        |> quicksort
+      let after = tail
+        |> list.filter(fn(x) { x >= p })
+        |> quicksort
       list.concat(before, [p, ..after])
     }
   }
@@ -80,7 +76,8 @@ const HIGHLIGHTING: &str = r#"
         "if", "else", "when", "is", "fn", "use",
         "let", "pub", "type", "opaque", "const",
         "todo", "expect", "test", "trace", "fail",
-        "once", "validator", "and", "or", "via"
+        "once", "validator", "and", "or", "via",
+        "bench"
     ],
     "operators": [
         "->", "|>", "..", "<=", ">=", "==", "!=", "<", ">", "&&", "||",
